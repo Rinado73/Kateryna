@@ -3,120 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Календар 2025 - Glassmorphism</title>
+    <title>Календар 2025 - Професійний Дизайн</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- Стиль Glassmorphism --- */
+        /* --- Стиль "Wonder LLC" (Мінімалізм та Професіоналізм) --- */
         html {
             scroll-behavior: smooth;
         }
         body {
             font-family: 'Montserrat', sans-serif;
-            background: #1a1a2e;
-            color: #e0e0e0;
-            overflow-x: hidden;
+            background: #F3F4F6; /* Світло-сірий фон */
+            color: #1F2937; /* Темний текст */
         }
 
-        /* Динамічний фон */
-        .background-shapes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .shape {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(150px);
-            opacity: 0.5;
-            transition: background 0.5s;
-        }
-
-        .shape1 {
-            width: 400px;
-            height: 400px;
-            background: #e94560;
-            top: -10%;
-            left: -10%;
-            animation: move 25s infinite alternate;
-        }
-
-        .shape2 {
-            width: 500px;
-            height: 500px;
-            background: #0f3460;
-            bottom: -15%;
-            right: -15%;
-            animation: move 30s infinite alternate-reverse;
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
         }
         
-        .shape3 {
-            width: 350px;
-            height: 350px;
-            background: #533483;
-            bottom: 20%;
-            left: 15%;
-            animation: move 28s infinite alternate;
-        }
-
-        @keyframes move {
-            from { transform: translate(0, 0) rotate(0deg); }
-            to { transform: translate(200px, 100px) rotate(360deg); }
-        }
-
-        /* Клас для ефекту скла */
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.08);
-            -webkit-backdrop-filter: blur(12px);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-        }
-        
-        .current-month-glow {
-            box-shadow: 0 0 25px rgba(233, 69, 96, 0.4);
-            border-color: rgba(233, 69, 96, 0.5);
+        .search-highlight > span:first-child {
+            animation: pulse 1.5s infinite;
         }
 
         /* Заголовки */
-        h1 { color: #ffffff; }
-        p { color: #c0c0c0; }
+        h1 { color: #111827; }
+        p { color: #4B5563; }
 
-        /* Градієнти для місяців */
-        .gradient-jan { background-image: linear-gradient(to top right, #2980b9, #6dd5fa); }
-        .gradient-feb { background-image: linear-gradient(to top right, #c94b4b, #4b134f); }
-        .gradient-mar { background-image: linear-gradient(to top right, #11998e, #38ef7d); }
-        .gradient-apr { background-image: linear-gradient(to top right, #ff8008, #ffc837); }
-        .gradient-may { background-image: linear-gradient(to top right, #56ab2f, #a8e063); }
-        .gradient-jun { background-image: linear-gradient(to top right, #f857a6, #ff5858); }
-        .gradient-jul { background-image: linear-gradient(to top right, #e52d27, #b31217); }
-        .gradient-aug { background-image: linear-gradient(to top right, #ff512f, #f09819); }
-        .gradient-sep { background-image: linear-gradient(to top right, #8e2de2, #4a00e0); }
-        .gradient-oct { background-image: linear-gradient(to top right, #f4d03f, #16a085); }
-        .gradient-nov { background-image: linear-gradient(to top right, #d4fc79, #96e6a1); }
-        .gradient-dec { background-image: linear-gradient(to top right, #1c92d2, #f2fcfe); }
+        /* Картки місяців та фільтрів */
+        .panel {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+        }
+        
+        .current-month-glow {
+            border-color: #3B82F6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        
+        /* Шапки місяців */
+        .month-header {
+            background-color: #F9FAFB;
+            border-bottom: 1px solid #E5E7EB;
+            color: #111827;
+        }
 
         /* Стилі для клітинок календаря */
         .calendar-day {
             transition: transform 0.2s ease-in-out, background-color 0.2s;
-            border-radius: 10px;
+            border-radius: 8px;
         }
         .calendar-day:hover:not(.empty) {
             transform: scale(1.05);
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: #EFF6FF;
             z-index: 10;
         }
-        .weekend { background-color: rgba(0,0,0,0.1); }
+        .weekend { background-color: #F9FAFB; }
         .today > span:first-child {
-             background-color: #e94560;
+             background-color: #3B82F6;
              color: white;
              border-radius: 50%;
              width: 2.25rem;
@@ -124,60 +73,70 @@
              display: inline-flex;
              align-items: center;
              justify-content: center;
-             font-weight: bold;
-             box-shadow: 0 0 0 2px rgba(26,26,46,0.5), 0 0 0 4px #e94560;
+             font-weight: 600;
         }
         
         /* Стилі для фільтрів */
         .form-checkbox, .form-input, #country-filter-button, #clear-filters-btn {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            color: #e0e0e0 !important;
-            transition: background-color 0.2s, box-shadow 0.2s;
+            background-color: #FFFFFF !important;
+            border: 1px solid #D1D5DB !important;
+            color: #1F2937 !important;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-checkbox:focus, .form-input:focus, #country-filter-button:focus {
+            outline: none;
+            border-color: #3B82F6 !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
         }
         .form-checkbox:checked {
-            background-color: #e94560 !important;
+            background-color: #3B82F6 !important;
+            border-color: #3B82F6 !important;
         }
         #clear-filters-btn:hover {
-            background-color: rgba(255, 255, 255, 0.2) !important;
+            background-color: #F9FAFB !important;
         }
-        ::placeholder { color: #a0a0a0 !important; }
+        ::placeholder { color: #9CA3AF !important; }
         
         /* Спливаючі елементи */
-        #tooltip, #country-filter-dropdown {
-            background: rgba(30, 30, 50, 0.7);
-            -webkit-backdrop-filter: blur(15px);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
+        #tooltip {
+            background: #1F2937;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        #country-filter-dropdown {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
         #country-list li:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: #EFF6FF;
         }
-        .flag-icon { border: 1px solid rgba(255,255,255,0.1); }
+        .flag-icon { border: 1px solid #E5E7EB; }
     </style>
 </head>
 <body class="p-4 sm:p-6 md:p-8">
-    <div class="background-shapes">
-        <div class="shape shape1"></div>
-        <div class="shape shape2"></div>
-        <div class="shape shape3"></div>
-    </div>
 
     <div class="max-w-7xl mx-auto">
-        <header class="text-center mb-6 md:mb-12 fade-in">
+        <header class="text-center mb-6 md:mb-12">
             <h1 class="text-4xl md:text-5xl font-bold">Глобальний Календар 2025</h1>
             <p class="mt-2 text-lg">Інтерактивний огляд свят та подій у світі</p>
         </header>
+        
+        <div class="text-center mb-4 font-semibold text-gray-600" id="holiday-counter-container">
+            <span id="holiday-counter"></span>
+        </div>
 
         <!-- Панель фільтрів -->
-        <div id="filters" class="mb-8 p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center fade-in glass-effect" data-selected-country="all">
-            <!-- Вдосконалений Фільтр за країною -->
+        <div id="filters" class="mb-8 p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center panel" data-selected-country="all">
+            <!-- Фільтр за країною -->
             <div class="relative">
                 <label class="block text-sm font-medium mb-1">Країна:</label>
-                <button id="country-filter-button" class="w-full flex items-center justify-between text-left p-2 rounded-md shadow-sm">
+                <button id="country-filter-button" class="w-full flex items-center justify-between text-left p-2 rounded-md">
                     <span class="flex items-center">
-                        <img id="selected-country-flag" src="https://flagcdn.com/w20/ua.png" class="flag-icon mr-2 hidden" alt="flag">
+                        <img id="selected-country-flag" class="flag-icon mr-2 hidden" alt="flag">
                         <span id="selected-country-name">Всі країни</span>
                     </span>
                     <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
@@ -193,15 +152,15 @@
             <div class="flex flex-wrap gap-x-4 gap-y-2 items-center justify-center">
                  <label class="block text-sm font-medium md:hidden">Тип свята:</label>
                  <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-red-500 border-gray-500 rounded focus:ring-red-400" value="red" checked>
+                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" value="red" checked>
                     <span class="ml-2">Національні</span>
                 </label>
                 <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-purple-500 border-gray-500 rounded focus:ring-purple-400" value="purple" checked>
+                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" value="purple" checked>
                     <span class="ml-2">Релігійні</span>
                 </label>
                 <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-green-500 border-gray-500 rounded focus:ring-green-400" value="green" checked>
+                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" value="green" checked>
                     <span class="ml-2">Агрономічні</span>
                 </label>
             </div>
@@ -209,7 +168,7 @@
             <div class="flex items-end gap-2">
                 <div class="flex-grow">
                     <label class="block text-sm font-medium mb-1">Пошук за назвою:</label>
-                    <input type="text" id="search-filter" placeholder="Наприклад, День незалежності" class="w-full p-2 rounded-md shadow-sm form-input">
+                    <input type="text" id="search-filter" placeholder="Наприклад, День незалежності" class="w-full p-2 rounded-md form-input">
                 </div>
                 <button id="clear-filters-btn" title="Очистити фільтри" class="p-2 rounded-md">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
@@ -387,13 +346,13 @@
             // Глобальні змінні
             const monthNames = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"];
             const dayNames = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
-            const gradientClasses = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
             const year = 2025;
             
             // Елементи DOM
             const filters = document.getElementById('filters');
             const calendarContainer = document.getElementById('calendar-container');
             const tooltip = document.getElementById('tooltip');
+            const holidayCounter = document.getElementById('holiday-counter');
             const countryFilterButton = document.getElementById('country-filter-button');
             const countryFilterDropdown = document.getElementById('country-filter-dropdown');
             const countrySearchInput = document.getElementById('country-search-input');
@@ -419,15 +378,15 @@
 
                 monthNames.forEach((monthName, monthIndex) => {
                     const monthDiv = document.createElement('div');
-                    monthDiv.className = `month-grid glass-effect p-4`;
+                    monthDiv.className = `month-grid panel p-4`;
                     if(monthIndex === currentMonthIndex && year === currentYear) {
                         monthDiv.classList.add('current-month-glow');
                     }
                     
                     const header = document.createElement('div');
-                    header.className = `p-3 -m-4 mb-4 text-white font-bold text-xl text-center gradient-${gradientClasses[monthIndex]}`;
-                    header.style.borderTopLeftRadius = '20px';
-                    header.style.borderTopRightRadius = '20px';
+                    header.className = `month-header p-3 -m-4 mb-4 font-bold text-xl text-center`;
+                    header.style.borderTopLeftRadius = '12px';
+                    header.style.borderTopRightRadius = '12px';
                     header.textContent = `${monthName} ${year}`;
                     monthDiv.appendChild(header);
 
@@ -435,7 +394,7 @@
                     grid.className = 'grid grid-cols-7 gap-1 flex-grow';
                     
                     dayNames.forEach(day => {
-                        grid.appendChild(Object.assign(document.createElement('div'), { className: 'text-center font-semibold text-sm py-1', textContent: day }));
+                        grid.appendChild(Object.assign(document.createElement('div'), { className: 'text-center font-semibold text-gray-500 text-sm py-1', textContent: day }));
                     });
 
                     const firstDayOfMonth = new Date(year, monthIndex, 1);
@@ -500,7 +459,7 @@
                 const sortedCountries = Array.from(countries).sort((a, b) => a.localeCompare(b, 'uk'));
                 
                 const allCountriesLi = document.createElement('li');
-                allCountriesLi.className = 'p-2 hover:bg-gray-100/20 rounded-md cursor-pointer flex items-center';
+                allCountriesLi.className = 'p-2 hover:bg-gray-100 rounded-md cursor-pointer flex items-center';
                 allCountriesLi.textContent = 'Всі країни';
                 allCountriesLi.dataset.country = 'all';
                 allCountriesLi.addEventListener('click', () => selectCountry('all', 'Всі країни'));
@@ -509,7 +468,7 @@
                 sortedCountries.forEach(country => {
                     if (country && !country.includes("країни") && !country.includes("світ") && !country.includes("півкуля") && !country.includes("Азія") ) {
                          const li = document.createElement('li');
-                         li.className = 'p-2 hover:bg-gray-100/20 rounded-md cursor-pointer flex items-center';
+                         li.className = 'p-2 hover:bg-gray-100 rounded-md cursor-pointer flex items-center';
                          li.dataset.country = country;
                          const code = countryCodes[country]?.toLowerCase();
                          if (code) {
@@ -547,8 +506,12 @@
                 const selectedTypes = Array.from(typeFilters).filter(cb => cb.checked).map(cb => cb.value);
                 const searchQuery = searchFilter.value.toLowerCase();
                 let firstFoundElement = null;
+                let visibleHolidaysCount = 0;
 
-                document.querySelectorAll('.calendar-day.has-holiday').forEach(dayCell => {
+                document.querySelectorAll('.calendar-day').forEach(dayCell => {
+                    dayCell.classList.remove('search-highlight');
+                    if (!dayCell.classList.contains('has-holiday')) return;
+
                     const cellHolidays = JSON.parse(dayCell.dataset.holidays);
                     
                     const filteredHolidays = cellHolidays.filter(h => {
@@ -560,13 +523,15 @@
 
                     dayCell.querySelector('.holiday-markers')?.remove();
                     dayCell.querySelector('.short-name-label')?.remove();
-                    
-                    dayCell.dataset.tooltipContent = ''; // Reset tooltip content
+                    dayCell.dataset.tooltipContent = ''; // ВИПРАВЛЕННЯ: Очищуємо підказку перед оновленням
 
                     if (filteredHolidays.length > 0) {
                         dayCell.style.opacity = '1';
-                        if (isSearch && !firstFoundElement) {
+                        visibleHolidaysCount += filteredHolidays.length;
+
+                        if (searchQuery.length > 0 && !firstFoundElement) {
                             firstFoundElement = dayCell;
+                            dayCell.classList.add('search-highlight');
                         }
                         
                         const markersDiv = document.createElement('div');
@@ -586,21 +551,23 @@
 
                         if(shortNames.length > 0) {
                             const shortNameLabel = document.createElement('span');
-                            shortNameLabel.className = 'short-name-label absolute top-0.5 text-center text-[8px] opacity-70 leading-none';
+                            shortNameLabel.className = 'short-name-label absolute top-0.5 text-center text-[8px] opacity-70 leading-none text-gray-500';
                             shortNameLabel.textContent = shortNames.join('/');
                             dayCell.appendChild(shortNameLabel);
                         }
 
                         dayCell.appendChild(markersDiv);
                         dayCell.dataset.tooltipContent = filteredHolidays.map((h, index) => `
-                            <div class="${index > 0 ? 'mt-2 pt-2 border-t border-white/20' : ''}">
+                            <div class="${index > 0 ? 'mt-2 pt-2 border-t border-gray-700' : ''}">
                                 <strong class="block">${h.name}</strong>
-                                <span class="text-xs text-gray-300">${h.countries.join(', ')}</span>
+                                <span class="text-xs text-gray-400">${h.countries.join(', ')}</span>
                             </div>`).join('');
                     } else {
                         dayCell.style.opacity = '0.5';
                     }
                 });
+                
+                holidayCounter.textContent = `Знайдено: ${visibleHolidaysCount} свят`;
 
                 if (isSearch && firstFoundElement) {
                     firstFoundElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
