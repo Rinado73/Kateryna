@@ -3,751 +3,666 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Календар 2025 - Професійний Дизайн</title>
+    <title>Глобальний Календар 2025 | Neon Future (Оновлено)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        /* --- Стиль "Wonder LLC" (Мінімалізм та Професіоналізм) --- */
-        html {
-            scroll-behavior: smooth;
+        :root {
+            --bg-color: #0d0d2b;
+            --primary-neon: #ff00ff;
+            --secondary-neon: #00ffff;
+            --text-color: #e0e0e0;
         }
+
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: #F3F4F6; /* Світло-сірий фон */
-            color: #1F2937; /* Темний текст */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); }
-            70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
-        }
-        
-        .search-highlight > span:first-child {
-            animation: pulse 1.5s infinite;
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
         }
 
-        /* Заголовки */
-        h1 { color: #111827; }
-        p { color: #4B5563; }
-
-        /* Картки місяців та фільтрів */
-        .panel {
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-        }
-        
-        .current-month-glow {
-            border-color: #3B82F6;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
-        }
-        
-        /* Шапки місяців */
-        .month-header {
-            background-color: #F9FAFB;
-            border-bottom: 1px solid #E5E7EB;
-            color: #111827;
-        }
-        .month-header-clickable {
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .month-header-clickable:hover {
-            background-color: #F3F4F6;
+        /* Animated Grid Background */
+        #main-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-image:
+                linear-gradient(to right, rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: move-grid 20s linear infinite;
+            z-index: -2; /* Lower z-index */
+            will-change: transform;
         }
 
-        /* Стилі для клітинок календаря */
-        .calendar-day {
-            transition: transform 0.2s ease-in-out, background-color 0.2s;
-            border-radius: 8px;
+        @keyframes move-grid {
+            from { background-position: 0 0; }
+            to { background-position: 80px 80px; }
         }
-        .calendar-day:hover:not(.empty) {
-            transform: scale(1.05);
-            background-color: #EFF6FF;
-            z-index: 10;
-        }
-        .weekend { background-color: #F9FAFB; }
-        .today > span:first-child {
-             background-color: #3B82F6;
-             color: white;
-             border-radius: 50%;
-             width: 2.25rem;
-             height: 2.25rem;
-             display: inline-flex;
-             align-items: center;
-             justify-content: center;
-             font-weight: 600;
-        }
-        
-        /* Стилі для фільтрів */
-        .form-checkbox, .form-input, #country-filter-button, #clear-filters-btn {
-            background-color: #FFFFFF !important;
-            border: 1px solid #D1D5DB !important;
-            color: #1F2937 !important;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .form-checkbox:focus, .form-input:focus, #country-filter-button:focus {
-            outline: none;
-            border-color: #3B82F6 !important;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-        }
-        .form-checkbox:checked {
-            background-color: #3B82F6 !important;
-            border-color: #3B82F6 !important;
-        }
-        #clear-filters-btn:hover {
-            background-color: #F9FAFB !important;
-        }
-        ::placeholder { color: #9CA3AF !important; }
-        
-        /* Спливаючі елементи */
-        #tooltip {
-            background: #1F2937;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            z-index: 100;
-        }
-        #country-filter-dropdown {
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 8px;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-        #country-list li:hover {
-            background-color: #EFF6FF;
-        }
-        .flag-icon { border: 1px solid #E5E7EB; }
 
-        /* Стилі для перемикання вкладок */
-        .view { display: none; }
-        .view.active { display: block; }
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(13, 13, 43, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        /* Neon Text Effect */
+        .neon-text-primary { text-shadow: 0 0 5px var(--primary-neon), 0 0 10px var(--primary-neon), 0 0 20px var(--primary-neon); }
+        .neon-text-secondary { text-shadow: 0 0 5px var(--secondary-neon), 0 0 10px var(--secondary-neon), 0 0 20px var(--secondary-neon); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(13, 13, 43, 0.5); }
+        ::-webkit-scrollbar-thumb { background: var(--secondary-neon); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-neon); }
+
+        /* Pulsing animation */
+        .pulse-animation { animation: pulse-effect 1.5s infinite; }
+        @keyframes pulse-effect {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0.7); }
+            70% { box-shadow: 0 0 10px 15px rgba(255, 0, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0); }
+        }
+
+        /* Tooltip */
+        .tooltip { position: relative; display: inline-block; }
+        .tooltip .tooltiptext {
+            visibility: hidden; width: 200px; background-color: rgba(13, 13, 43, 0.9);
+            color: #fff; text-align: left; border-radius: 6px; padding: 8px;
+            position: absolute; z-index: 10; bottom: 125%; left: 50%; margin-left: -100px;
+            opacity: 0; transition: opacity 0.3s; font-size: 0.8rem;
+            border: 1px solid var(--secondary-neon); pointer-events: none;
+        }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
         
-        /* Хлібні крихти */
-        .breadcrumb-link {
-            cursor: pointer;
-            transition: color 0.2s;
+        /* View transitions */
+        .view { transition: opacity 0.4s ease-in-out; }
+        .view.hidden { opacity: 0; pointer-events: none; position: absolute; }
+
+        /* Modal Styles */
+        #day-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 50; transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0; visibility: hidden;
         }
-        .breadcrumb-link:hover {
-            color: #3B82F6;
+        #day-modal.visible { opacity: 1; visibility: visible; }
+        .modal-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
         }
+        .modal-content {
+            position: relative; z-index: 51; width: 90%; max-width: 600px;
+            max-height: 80vh; overflow-y: auto;
+            transition: transform 0.3s ease; transform: scale(0.9);
+        }
+        #day-modal.visible .modal-content { transform: scale(1); }
     </style>
 </head>
-<body class="p-4 sm:p-6 md:p-8">
+<body class="antialiased">
 
-    <div class="max-w-7xl mx-auto">
-        <header class="text-center mb-4">
-            <h1 class="text-4xl md:text-5xl font-bold">Глобальний Календар 2025</h1>
-            <p class="mt-2 text-lg">Інтерактивний огляд свят та подій у світі</p>
+    <div id="main-container" class="min-h-screen p-4 sm:p-6 lg:p-8 relative">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-orbitron font-bold neon-text-primary">Глобальний Календар 2025</h1>
+            <p class="text-lg text-gray-300 mt-2">Неонові горизонти світових свят</p>
         </header>
 
-        <nav id="breadcrumbs" class="text-center text-gray-500 mb-4 font-medium"></nav>
-        
-        <div id="holiday-counter-container" class="text-center mb-4 font-semibold text-gray-600">
-            <span id="holiday-counter"></span>
+        <!-- Filters Panel -->
+        <div id="filters-panel" class="glass-panel p-4 rounded-xl mb-6 sticky top-4 z-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                <!-- Filters and Controls here... -->
+                <div>
+                    <label for="country-filter" class="block text-sm font-medium neon-text-secondary mb-1">Країна</label>
+                    <select id="country-filter" class="w-full bg-gray-900/50 border border-cyan-500/30 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 p-2 text-white">
+                        <option value="">Усі країни</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium neon-text-secondary mb-1">Тип свята</label>
+                    <div id="type-filter" class="flex flex-wrap gap-x-4 gap-y-2">
+                        <label class="flex items-center space-x-2"><input type="checkbox" value="Національні" class="form-checkbox h-4 w-4 rounded bg-gray-700 border-gray-600 text-pink-500 focus:ring-pink-600"><span>Національні</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" value="Релігійні" class="form-checkbox h-4 w-4 rounded bg-gray-700 border-gray-600 text-pink-500 focus:ring-pink-600"><span>Релігійні</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" value="Агрономічні" class="form-checkbox h-4 w-4 rounded bg-gray-700 border-gray-600 text-pink-500 focus:ring-pink-600"><span>Агрономічні</span></label>
+                    </div>
+                </div>
+                <div>
+                    <label for="search-input" class="block text-sm font-medium neon-text-secondary mb-1">Пошук за назвою</label>
+                    <input type="text" id="search-input" placeholder="Назва свята..." class="w-full bg-gray-900/50 border border-cyan-500/30 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 p-2 text-white placeholder-gray-400">
+                </div>
+                <div class="flex flex-col space-y-2">
+                     <p id="holiday-counter" class="text-center text-sm neon-text-secondary mb-2 h-5"></p>
+                    <button id="clear-filters" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-[0_0_10px_var(--primary-neon)]">Очистити фільтри</button>
+                </div>
+            </div>
         </div>
 
-        <!-- Панель фільтрів -->
-        <div id="filters" class="mb-8 p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center panel" data-selected-country="all">
-            <!-- Фільтр за країною -->
-            <div class="relative">
-                <label class="block text-sm font-medium mb-1">Країна:</label>
-                <button id="country-filter-button" class="w-full flex items-center justify-between text-left p-2 rounded-md">
-                    <span class="flex items-center">
-                        <img id="selected-country-flag" class="flag-icon mr-2 hidden" alt="flag">
-                        <span id="selected-country-name">Всі країни</span>
-                    </span>
-                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                </button>
-                <div id="country-filter-dropdown" class="absolute hidden mt-1 w-full z-20 p-2 origin-top" >
-                    <input type="text" id="country-search-input" placeholder="Пошук країни..." class="w-full p-2 mb-2 rounded-md form-input">
-                    <ul id="country-list" class="max-h-60 overflow-y-auto">
-                        <!-- Опції країн додаються динамічно -->
-                    </ul>
-                </div>
-            </div>
-            <!-- Фільтр за типом свята -->
-            <div class="flex flex-wrap gap-x-4 gap-y-2 items-center justify-center">
-                 <label class="block text-sm font-medium md:hidden">Тип свята:</label>
-                 <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" value="red" checked>
-                    <span class="ml-2">Національні</span>
-                </label>
-                <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" value="purple" checked>
-                    <span class="ml-2">Релігійні</span>
-                </label>
-                <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" value="green" checked>
-                    <span class="ml-2">Агрономічні</span>
-                </label>
-            </div>
-             <!-- Пошук та кнопка очищення -->
-            <div class="flex items-end gap-2">
-                <div class="flex-grow">
-                    <label class="block text-sm font-medium mb-1">Пошук за назвою:</label>
-                    <input type="text" id="search-filter" placeholder="Наприклад, День незалежності" class="w-full p-2 rounded-md form-input">
-                </div>
-                <button id="clear-filters-btn" title="Очистити фільтри" class="p-2 rounded-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Контейнери для різних рівнів перегляду -->
-        <div id="year-view" class="view grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"></div>
-        <div id="month-view" class="view"></div>
-        <div id="day-view" class="view"></div>
+        <!-- Breadcrumbs -->
+        <nav id="breadcrumbs" class="mb-6 text-lg"></nav>
+
+        <!-- Views Container -->
+        <main id="views-container" class="relative">
+            <div id="year-view" class="view glass-panel p-4 rounded-xl"></div>
+            <div id="month-view" class="view hidden glass-panel p-4 rounded-xl"></div>
+        </main>
     </div>
 
-    <div id="tooltip"></div>
+    <!-- Day Modal -->
+    <div id="day-modal">
+        <div class="modal-overlay" id="modal-overlay"></div>
+        <div class="modal-content glass-panel p-6 rounded-xl" id="modal-content-area">
+            <!-- Content will be injected by JS -->
+        </div>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- ПОВНА ОНОВЛЕНА БАЗА ДАНИХ СВЯТ ---
-            const holidays = {
-                // СІЧЕНЬ
-                "2025-01-01": [{ name: "Новий рік", shortName: "Новий рік", type: "red", countries: ["Швейцарія", "Сербія", "Японія", "Косово", "Австралія", "Північна Македонія", "Ізраїль", "Молдова", "Грузія", "ПАР", "Вірменія", "Тайвань", "Таїланд", "Казахстан", "Сінгапур", "Нова Зеландія", "Південна Корея", "Туніс", "Ямайка", "Руанда", "Тринідад і Тобаго", "Сенегал", "Сьєрра-Леоне", "Австрія", "Канада", "Німеччина", "Греція", "Болгарія", "Нідерланди", "Бельгія", "Хорватія", "Боснія і Герцеговина", "Кенія", "Танзанія", "Уганда"] }],
-                "2025-01-02": [{ name: "День після Нового року", shortName: "Після НР", type: "red", countries: ["Нова Зеландія"] }, { name: "Свято 2 січня", shortName: "2 січня", type: "red", countries: ["Шотландія (Велика Британія)"] }],
-                "2025-01-06": [{ name: "Богоявлення (Водохреща)", shortName: "Водохреща", type: "purple", countries: ["Австрія", "Німеччина", "Греція"] }],
-                "2025-01-07": [{ name: "Православне Різдво", shortName: "Різдво", type: "purple", countries: ["Сербія", "Північна Македонія", "Грузія", "Вірменія", "Боснія і Герцеговина"] }],
-                "2025-01-13": [{ name: "Православний Новий рік", shortName: "Старий НР", type: "purple", countries: ["Сербія", "Північна Македонія", "Грузія"] }],
-                "2025-01-14": [{ name: "Макар Санкранті", shortName: "Санкранті", type: "green", countries: ["Індія"] }],
-                "2025-01-26": [{ name: "День Республіки", shortName: "День Респ.", type: "red", countries: ["Індія"] }],
-                "2025-01-27": [{ name: "День Австралії", shortName: "День Австр.", type: "red", countries: ["Австралія"] }],
-                // ЛЮТИЙ
-                "2025-02-01": [{ name: "День Федеральних територій", shortName: "День ФТ", type: "red", countries: ["Малайзія"] }],
-                "2025-02-03": [{ name: "День Героїв", shortName: "День Героїв", type: "red", countries: ["Мозамбік"] }],
-                "2025-02-11": [{ name: "День заснування держави", shortName: "День засн.", type: "red", countries: ["Японія"] }],
-                "2025-02-12": [{ name: "День Союзу", shortName: "День Союзу", type: "red", countries: ["М'янма"] }],
-                "2025-02-16": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Литва"] }],
-                "2025-02-18": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Гамбія"] }],
-                "2025-02-21": [{ name: "Міжнародний день рідної мови", shortName: "День мови", type: "red", countries: ["Бангладеш"] }],
-                "2025-02-23": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Бруней"] }],
-                "2025-02-24": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Естонія"] }],
-                // БЕРЕЗЕНЬ
-                "2025-03-01": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Боснія і Герцеговина"] }, { name: "Початок Рамадану", shortName: "Рамадан", type: "purple", countries: ["Ісламські країни"] }, { name: "Початок весняної посівної", shortName: "Посівна", type: "green", countries: ["Північна півкуля"] }],
-                "2025-03-03": [{ name: "День визволення", shortName: "День визв.", type: "red", countries: ["Болгарія"] }],
-                "2025-03-06": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Гана"] }],
-                "2025-03-08": [{ name: "Міжнародний жіночий день", shortName: "Жіночий день", type: "red", countries: ["Вірменія", "Грузія", "Казахстан", "Узбекистан", "Молдова"] }],
-                "2025-03-12": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Маврикій"] }],
-                "2025-03-14": [{ name: "Холі", shortName: "Холі", type: "purple", countries: ["Індія", "Непал", "Маврикій", "Тринідад і Тобаго", "Сінгапур", "Малайзія"] }],
-                "2025-03-17": [{ name: "День святого Патрика", shortName: "Св. Патрик", type: "red", countries: ["Ірландія"] }],
-                "2025-03-20": [{ name: "День весняного рівнодення", shortName: "Рівнодення", type: "green", countries: ["Японія"] }],
-                "2025-03-21": [{ name: "Новруз (Перський Новий рік)", shortName: "Новруз", type: "green", countries: ["Казахстан", "Узбекистан"] }],
-                "2025-03-23": [{ name: "День Пакистану", shortName: "День Пак.", type: "red", countries: ["Пакистан"] }],
-                "2025-03-25": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Греція"] }],
-                "2025-03-26": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Бангладеш"] }],
-                "2025-03-30": [{ name: "Ід аль-Фітр (Ураза-байрам)", shortName: "Ураза-байрам", type: "purple", countries: ["Ісламські країни"] }],
-                "2025-03-31": [{ name: "Ід аль-Фітр (Ураза-байрам)", shortName: "Ураза-байрам", type: "purple", countries: ["Ісламські країни"] }],
-                // КВІТЕНЬ
-                "2025-04-01": [{ name: "Сезон збору кукурудзи (Африка)", shortName: "Збір кукур.", type: "green", countries: ["Африка"] }, { name: "Початок зимової посівної", shortName: "Посівна", type: "green", countries: ["Південна півкуля"] }],
-                "2025-04-04": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Сенегал"] }],
-                "2025-04-06": [{ name: "День Чакрі", shortName: "День Чакрі", type: "red", countries: ["Таїланд"] }],
-                "2025-04-13": [{ name: "Сонгкран (Тайський Новий рік)", shortName: "Сонгкран", type: "red", countries: ["Таїланд"] }, { name: "Песах", shortName: "Песах", type: "purple", countries: ["Ізраїль"] }],
-                "2025-04-14": [{ name: "Сонгкран (Тайський Новий рік)", shortName: "Сонгкран", type: "red", countries: ["Таїланд"] }, { name: "Новий рік", shortName: "Новий рік", type: "red", countries: ["Камбоджа", "М'янма", "Шрі-Ланка"] }],
-                "2025-04-15": [{ name: "Сонгкран (Тайський Новий рік)", shortName: "Сонгкран", type: "red", countries: ["Таїланд"] }],
-                "2025-04-17": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Сирія"] }],
-                "2025-04-18": [{ name: "Страсна п'ятниця", shortName: "Стр. п'ятн.", type: "purple", countries: ["Швейцарія", "Австралія", "Нова Зеландія", "ПАР", "Ямайка", "Тринідад і Тобаго", "Австрія", "Канада", "Німеччина", "Нідерланди", "Бельгія", "Хорватія", "Кенія", "Танзанія", "Уганда"] }],
-                "2025-04-21": [{ name: "Великодній понеділок", shortName: "Великдень", type: "purple", countries: ["Швейцарія", "Австралія", "Нова Зеландія", "Австрія", "Німеччина", "Нідерланди", "Бельгія", "Хорватія"] }],
-                "2025-04-25": [{ name: "День АНЗАК", shortName: "День АНЗАК", type: "red", countries: ["Австралія", "Нова Зеландія"] }],
-                "2025-04-27": [{ name: "День Свободи", shortName: "День Своб.", type: "red", countries: ["ПАР"] }],
-                "2025-04-30": [{ name: "День Короля", shortName: "День Короля", type: "red", countries: ["Нідерланди"] }],
-                // ТРАВЕНЬ
-                "2025-05-01": [{ name: "День праці", shortName: "День праці", type: "red", countries: ["Швейцарія", "Алжир", "Сербія", "Косово", "Північна Македонія", "Молдова", "Бангладеш", "Нігерія", "Грузія", "Вірменія", "Казахстан", "Узбекистан", "Кот-д'Івуар", "Шрі-Ланка", "Судан", "Пакистан", "Бенін", "Ботсвана", "Індонезія", "Того", "Гана", "Малайзія", "Ангола", "Ефіопія", "Сінгапур", "Замбія", "Філіппіни", "Зімбабве", "Гвінея", "Лесото", "Південна Корея", "Туніс", "Руанда", "Камерун", "Тринідад і Тобаго", "Сенегал", "Китай", "Сьєрра-Леоне", "Австрія", "Німеччина", "Греція", "Болгарія", "Бельгія", "Хорватія", "Нігер", "Боснія і Герцеговина", "Марокко", "Туреччина", "Кенія", "Танзанія", "Уганда"] }],
-                "2025-05-05": [{ name: "День визволення", shortName: "День визв.", type: "red", countries: ["Нідерланди"] }],
-                "2025-05-08": [{ name: "День Перемоги в Європі", shortName: "День Перемоги", type: "red", countries: ["Європейські країни"] }],
-                "2025-05-09": [{ name: "День Перемоги", shortName: "День Перемоги", type: "red", countries: ["Вірменія", "Казахстан", "Узбекистан"] }],
-                "2025-05-12": [{ name: "Весак", shortName: "Весак", type: "purple", countries: ["Таїланд", "Камбоджа", "М'янма", "Шрі-Ланка", "В'єтнам"] }],
-                "2025-05-24": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Еритрея"] }],
-                "2025-05-25": [{ name: "День Африки", shortName: "День Африки", type: "red", countries: ["Африканські країни"] }],
-                "2025-05-26": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Грузія"] }],
-                "2025-05-28": [{ name: "День Республіки", shortName: "День Респ.", type: "red", countries: ["Вірменія"] }],
-                // ЧЕРВЕНЬ
-                "2025-06-01": [{ name: "День дітей", shortName: "День дітей", type: "red", countries: ["Китай"] }, { name: "Сезон збору пшениці", shortName: "Збір пшениці", type: "green", countries: ["Північна півкуля"] }, { name: "Початок мусонної посівної", shortName: "Посівна", type: "green", countries: ["Південна Азія"] }],
-                "2025-06-02": [{ name: "День Республіки", shortName: "День Респ.", type: "red", countries: ["Італія"] }],
-                "2025-06-05": [{ name: "День Конституції", shortName: "День Конст.", type: "red", countries: ["Данія"] }],
-                "2025-06-06": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Швеція"] }, { name: "Ід аль-Адха (Курбан-байрам)", shortName: "Курбан-байрам", type: "purple", countries: ["Ісламські країни"] }],
-                "2025-06-07": [{ name: "Ід аль-Адха (Курбан-байрам)", shortName: "Курбан-байрам", type: "purple", countries: ["Ісламські країни"] }],
-                "2025-06-10": [{ name: "День Португалії", shortName: "День Порт.", type: "red", countries: ["Португалія"] }],
-                "2025-06-12": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Філіппіни"] }],
-                "2025-06-16": [{ name: "День молоді", shortName: "День молоді", type: "red", countries: ["ПАР"] }],
-                "2025-06-17": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Ісландія"] }],
-                "2025-06-23": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Люксембург"] }],
-                "2025-06-24": [{ name: "День святого Іоанна", shortName: "Іоанна", type: "purple", countries: ["Різні країни"] }],
-                "2025-06-25": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Хорватія", "Словенія"] }],
-                "2025-06-26": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Мадагаскар"] }, { name: "Ісламський Новий рік", shortName: "Ісл. НР", type: "purple", countries: ["Ісламські країни"] }],
-                "2025-06-27": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Джибуті"] }],
-                // ЛИПЕНЬ
-                "2025-07-01": [{ name: "День Канади", shortName: "День Канади", type: "red", countries: ["Канада"] }],
-                "2025-07-05": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Алжир", "Кабо-Верде"] }],
-                "2025-07-09": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Південний Судан"] }],
-                "2025-07-10": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Багами"] }, { name: "Асалха Пуджа", shortName: "Асалха Пуджа", type: "purple", countries: ["Таїланд", "Камбоджа", "М'янма", "Шрі-Ланка"] }],
-                "2025-07-11": [{ name: "Початок буддійського посту", shortName: "Будд. піст", type: "purple", countries: ["Таїланд", "Камбоджа", "М'янма", "Шрі-Ланка"] }],
-                "2025-07-12": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Сан-Томе і Принсіпі"] }],
-                "2025-07-14": [{ name: "День взяття Бастилії", shortName: "День Баст.", type: "red", countries: ["Франція"] }],
-                "2025-07-20": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Колумбія"] }],
-                "2025-07-21": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Бельгія"] }],
-                "2025-07-23": [{ name: "День Революції", shortName: "День Рев.", type: "red", countries: ["Єгипет"] }],
-                "2025-07-26": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Ліберія", "Мальдіви"] }],
-                "2025-07-28": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Перу"] }],
-                "2025-07-30": [{ name: "День трону", shortName: "День трону", type: "red", countries: ["Марокко"] }],
-                // СЕРПЕНЬ
-                "2025-08-01": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Швейцарія"] }],
-                "2025-08-06": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Ямайка", "Болівія"] }],
-                "2025-08-09": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Сінгапур"] }],
-                "2025-08-10": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Еквадор"] }],
-                "2025-08-11": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Чад"] }],
-                "2025-08-15": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Індія"] }, { name: "День визволення", shortName: "День визв.", type: "red", countries: ["Південна Корея"] }, { name: "Успіння Пресвятої Богородиці", shortName: "Успіння", type: "purple", countries: ["Австрія", "Бельгія", "Франція", "Греція", "Італія", "Польща", "Португалія", "Іспанія"] }],
-                "2025-08-17": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Індонезія"] }],
-                "2025-08-19": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Афганістан"] }],
-                "2025-08-24": [{ name: "День Незалежності України", shortName: "День нез. Укр.", type: "red", countries: ["Україна"] }],
-                "2025-08-25": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Уругвай"] }],
-                "2025-08-27": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Молдова"] }],
-                "2025-08-31": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Малайзія", "Тринідад і Тобаго", "Киргизстан"] }],
-                // ВЕРЕСЕНЬ
-                "2025-09-01": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Узбекистан"] }, { name: "Сезон збору рису (Азія)", shortName: "Збір рису", type: "green", countries: ["Азія"] }, { name: "Сезон збору бавовни", shortName: "Збір бавовни", type: "green", countries: ["Різні країни"] }],
-                "2025-09-02": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["В'єтнам"] }],
-                "2025-09-03": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Катар"] }],
-                "2025-09-04": [{ name: "Мавлід ан-Набі", shortName: "Мавлід", type: "purple", countries: ["Ісламські країни"] }],
-                "2025-09-07": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Бразилія"] }],
-                "2025-09-08": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Північна Македонія"] }],
-                "2025-09-09": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Таджикистан"] }],
-                "2025-09-15": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Коста-Рика", "Сальвадор", "Гватемала", "Гондурас", "Нікарагуа"] }],
-                "2025-09-16": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Мексика", "Папуа-Нова Гвінея"] }, { name: "Рош га-Шана", shortName: "Рош га-Шана", type: "purple", countries: ["Ізраїль"] }],
-                "2025-09-17": [{ name: "Рош га-Шана", shortName: "Рош га-Шана", type: "purple", countries: ["Ізраїль"] }],
-                "2025-09-18": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Чилі"] }],
-                "2025-09-21": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Вірменія", "Беліз", "Мальта"] }],
-                "2025-09-22": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Малі"] }],
-                "2025-09-23": [{ name: "День осіннього рівнодення", shortName: "Рівнодення", type: "green", countries: ["Японія"] }],
-                "2025-09-24": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Гвінея-Бісау"] }],
-                "2025-09-25": [{ name: "Йом-Кіпур", shortName: "Йом-Кіпур", type: "purple", countries: ["Ізраїль"] }],
-                "2025-09-30": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Ботсвана"] }, { name: "Суккот", shortName: "Суккот", type: "purple", countries: ["Ізраїль"] }],
-                // ЖОВТЕНЬ
-                "2025-10-01": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Китай", "Нігерія", "Кіпр"] }],
-                "2025-10-02": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Гвінея"] }, { name: "Душера", shortName: "Душера", type: "purple", countries: ["Індія", "Непал"] }],
-                "2025-10-03": [{ name: "День німецької єдності", shortName: "День єдн.", type: "red", countries: ["Німеччина"] }],
-                "2025-10-04": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Лесото"] }],
-                "2025-10-09": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Уганда"] }],
-                "2025-10-10": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Фіджі"] }],
-                "2025-10-12": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Екваторіальна Гвінея"] }],
-                "2025-10-20": [{ name: "Дівалі", shortName: "Дівалі", type: "purple", countries: ["Індія", "Непал", "Маврикій", "Тринідад і Тобаго", "Сінгапур", "Малайзія"] }],
-                "2025-10-24": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Замбія"] }],
-                "2025-10-26": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Австрія"] }],
-                "2025-10-27": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Туркменістан"] }],
-                "2025-10-28": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Чехія"] }],
-                "2025-10-29": [{ name: "День Республіки", shortName: "День Респ.", type: "red", countries: ["Туреччина"] }],
-                // ЛИСТОПАД
-                "2025-11-01": [{ name: "День усіх святих", shortName: "Всіх святих", type: "purple", countries: ["Австрія", "Бельгія", "Франція", "Німеччина", "Італія", "Польща", "Португалія", "Іспанія"] }],
-                "2025-11-03": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Панама"] }],
-                "2025-11-09": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Камбоджа"] }],
-                "2025-11-11": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Ангола", "Польща"] }, { name: "День перемир'я", shortName: "День перемир'я", type: "red", countries: ["Різні країни"] }],
-                "2025-11-18": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Латвія"] }],
-                "2025-11-22": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Ліван"] }],
-                "2025-11-25": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Суринам"] }],
-                "2025-11-28": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Албанія", "Мавританія"] }],
-                // ГРУДЕНЬ
-                "2025-12-01": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Румунія"] }],
-                "2025-12-02": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["ОАЕ", "Лаос"] }],
-                "2025-12-06": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Фінляндія"] }],
-                "2025-12-08": [{ name: "Непорочне зачаття", shortName: "Непор. зач.", type: "purple", countries: ["Австрія", "Бельгія", "Італія", "Португалія", "Іспанія"] }],
-                "2025-12-09": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Танзанія"] }],
-                "2025-12-12": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Кенія"] }],
-                "2025-12-16": [{ name: "День Незалежності", shortName: "День нез.", type: "red", countries: ["Казахстан", "Бахрейн"] }],
-                "2025-12-17": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Бутан"] }],
-                "2025-12-18": [{ name: "Національний день", shortName: "Нац. день", type: "red", countries: ["Катар"] }],
-                "2025-12-24": [{ name: "Святвечір", shortName: "Святвечір", type: "purple", countries: ["Християнські країни"] }],
-                "2025-12-25": [{ name: "Різдво Христове", shortName: "Різдво", type: "purple", countries: ["Швейцарія", "Австралія", "Нова Зеландія", "ПАР", "Ямайка", "Руанда", "Тринідад і Тобаго", "Сьєрра-Леоне", "Австрія", "Канада", "Німеччина", "Греція", "Болгарія", "Нідерланди", "Бельгія", "Хорватія", "Боснія і Герцеговина", "Кенія", "Танзанія", "Уганда", "Філіппіни", "Південна Корея"] }],
-                "2025-12-26": [{ name: "День подарунків / День св. Стефана", shortName: "День подарунків", type: "red", countries: ["Австралія", "Нова Зеландія", "ПАР", "Канада", "Німеччина", "Австрія"] }],
-                "2025-12-31": [{ name: "Переддень Нового року", shortName: "Переддень НР", type: "red", countries: ["Весь світ"] }]
-            };
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DATA ---
+    const holidays = [
+        // JANUARY
+        { name: "Новий рік", type: "Національні", countries: ["CHE", "SRB", "JPN", "XKX", "AUS", "MKD", "ISR", "MDA", "GEO", "ZAF", "ARM", "TWN", "THA", "KAZ", "SGP", "NZL", "KOR", "TUN", "JAM", "RWA", "TTO", "SEN", "SLE", "AUT", "CAN", "DEU", "GRC", "BGR", "NLD", "BEL", "HRV", "BIH", "KEN", "TZA", "UGA"], startDate: "2025-01-01", endDate: "2025-01-01" },
+        { name: "День після Нового року", type: "Національні", countries: ["NZL"], startDate: "2025-01-02", endDate: "2025-01-02" },
+        { name: "Другий день січня", type: "Національні", countries: ["GB-SCT"], startDate: "2025-01-02", endDate: "2025-01-02" },
+        { name: "Богоявлення", type: "Релігійні", countries: ["AUT", "DEU", "GRC"], startDate: "2025-01-06", endDate: "2025-01-06" },
+        { name: "Православне Різдво", type: "Релігійні", countries: ["SRB", "MKD", "GEO", "ARM", "BIH"], startDate: "2025-01-07", endDate: "2025-01-07" },
+        { name: "Православний Новий рік", type: "Національні", countries: ["SRB", "MKD", "GEO"], startDate: "2025-01-13", endDate: "2025-01-13" },
+        { name: "Макар Санкранті", type: "Агрономічні", countries: ["IND"], startDate: "2025-01-14", endDate: "2025-01-14" },
+        { name: "День Республіки", type: "Національні", countries: ["IND"], startDate: "2025-01-26", endDate: "2025-01-26" },
+        { name: "День Австралії", type: "Національні", countries: ["AUS"], startDate: "2025-01-27", endDate: "2025-01-27" },
+        // FEBRUARY
+        { name: "День Федеральної території", type: "Національні", countries: ["MYS"], startDate: "2025-02-01", endDate: "2025-02-01" },
+        { name: "День Героїв", type: "Національні", countries: ["MOZ"], startDate: "2025-02-03", endDate: "2025-02-03" },
+        { name: "День заснування нації", type: "Національні", countries: ["JPN"], startDate: "2025-02-11", endDate: "2025-02-11" },
+        { name: "День Союзу", type: "Національні", countries: ["MMR"], startDate: "2025-02-12", endDate: "2025-02-12" },
+        { name: "День Незалежності", type: "Національні", countries: ["LTU"], startDate: "2025-02-16", endDate: "2025-02-16" },
+        { name: "День Незалежності", type: "Національні", countries: ["GMB"], startDate: "2025-02-18", endDate: "2025-02-18" },
+        { name: "Міжнародний день рідної мови", type: "Національні", countries: ["BGD"], startDate: "2025-02-21", endDate: "2025-02-21" },
+        { name: "Національний день", type: "Національні", countries: ["BRN"], startDate: "2025-02-23", endDate: "2025-02-23" },
+        { name: "День Незалежності", type: "Національні", countries: ["EST"], startDate: "2025-02-24", endDate: "2025-02-24" },
+        // MARCH
+        { name: "День Незалежності", type: "Національні", countries: ["BIH"], startDate: "2025-03-01", endDate: "2025-03-01" },
+        { name: "День Визволення", type: "Національні", countries: ["BGR"], startDate: "2025-03-03", endDate: "2025-03-03" },
+        { name: "День Незалежності", type: "Національні", countries: ["GHA"], startDate: "2025-03-06", endDate: "2025-03-06" },
+        { name: "Міжнародний жіночий день", type: "Національні", countries: ["ARM", "GEO", "KAZ", "UZB", "MDA"], startDate: "2025-03-08", endDate: "2025-03-08" },
+        { name: "День Незалежності", type: "Національні", countries: ["MUS"], startDate: "2025-03-12", endDate: "2025-03-12" },
+        { name: "Весняне рівнодення", type: "Національні", countries: ["JPN"], startDate: "2025-03-20", endDate: "2025-03-20" },
+        { name: "Новруз (Перський Новий рік)", type: "Національні", countries: ["KAZ", "UZB"], startDate: "2025-03-21", endDate: "2025-03-21" },
+        { name: "День Пакистану", type: "Національні", countries: ["PAK"], startDate: "2025-03-23", endDate: "2025-03-23" },
+        { name: "День Незалежності", type: "Національні", countries: ["GRC"], startDate: "2025-03-25", endDate: "2025-03-25" },
+        { name: "День Незалежності", type: "Національні", countries: ["BGD"], startDate: "2025-03-26", endDate: "2025-03-26" },
+        // APRIL
+        { name: "День Незалежності", type: "Національні", countries: ["SEN"], startDate: "2025-04-04", endDate: "2025-04-04" },
+        { name: "День Чакрі", type: "Національні", countries: ["THA"], startDate: "2025-04-06", endDate: "2025-04-06" },
+        { name: "Сонгкран (Тайський Новий рік)", type: "Національні", countries: ["THA"], startDate: "2025-04-13", endDate: "2025-04-15" },
+        { name: "Новий рік", type: "Національні", countries: ["KHM", "MMR", "LKA"], startDate: "2025-04-14", endDate: "2025-04-14" },
+        { name: "День Незалежності", type: "Національні", countries: ["SYR"], startDate: "2025-04-17", endDate: "2025-04-17" },
+        { name: "Страсна п'ятниця", type: "Релігійні", countries: ["CHE", "AUS", "NZL", "ZAF", "JAM", "TTO", "AUT", "CAN", "DEU", "NLD", "BEL", "HRV", "KEN", "TZA", "UGA"], startDate: "2025-04-18", endDate: "2025-04-18" },
+        { name: "Великодній понеділок", type: "Релігійні", countries: ["CHE", "AUS", "NZL", "AUT", "DEU", "NLD", "BEL", "HRV"], startDate: "2025-04-21", endDate: "2025-04-21" },
+        { name: "День АНЗАК", type: "Національні", countries: ["AUS", "NZL"], startDate: "2025-04-25", endDate: "2025-04-25" },
+        { name: "День Свободи", type: "Національні", countries: ["ZAF"], startDate: "2025-04-27", endDate: "2025-04-27" },
+        { name: "День Короля", type: "Національні", countries: ["NLD"], startDate: "2025-04-30", endDate: "2025-04-30" },
+        // MAY
+        { name: "День Праці/Першотравень", type: "Національні", countries: ["CHE", "DZA", "SRB", "XKX", "MKD", "MDA", "BGD", "NGA", "GEO", "ARM", "KAZ", "UZB", "CIV", "LKA", "SDN", "PAK", "BEN", "BWA", "IDN", "TGO", "GHA", "MYS", "AGO", "ETH", "SGP", "ZMB", "PHL", "ZWE", "GIN", "LSO", "KOR", "TUN", "RWA", "CMR", "TTO", "SEN", "CHN", "SLE", "AUT", "DEU", "GRC", "BGR", "BEL", "HRV", "NER", "BIH", "MAR", "TUR", "KEN", "TZA", "UGA"], startDate: "2025-05-01", endDate: "2025-05-01" },
+        { name: "День Визволення", type: "Національні", countries: ["NLD"], startDate: "2025-05-05", endDate: "2025-05-05" },
+        { name: "День Перемоги в Європі", type: "Національні", countries: ["AUT", "BEL", "BGR", "HRV", "CZE", "DNK", "EST", "FIN", "FRA", "DEU", "GRC", "HUN", "ITA", "LVA", "LTU", "LUX", "NLD", "NOR", "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE", "GBR"], startDate: "2025-05-08", endDate: "2025-05-08" },
+        { name: "День Перемоги", type: "Національні", countries: ["ARM", "KAZ", "UZB"], startDate: "2025-05-09", endDate: "2025-05-09" },
+        { name: "День Незалежності", type: "Національні", countries: ["ERI"], startDate: "2025-05-24", endDate: "2025-05-24" },
+        { name: "День Африки", type: "Національні", countries: ["DZA", "AGO", "BEN", "BWA", "BFA", "BDI", "CMR", "CPV", "CAF", "TCD", "COM", "COG", "COD", "DJI", "EGY", "GNQ", "ERI", "SWZ", "ETH", "GAB", "GMB", "GHA", "GIN", "GNB", "CIV", "KEN", "LSO", "LBR", "LBY", "MDG", "MWI", "MLI", "MRT", "MUS", "MAR", "MOZ", "NAM", "NER", "NGA", "RWA", "STP", "SEN", "SYC", "SLE", "SOM", "ZAF", "SSD", "SDN", "TZA", "TGO", "TUN", "UGA", "ZMB", "ZWE"], startDate: "2025-05-25", endDate: "2025-05-25" },
+        { name: "День Незалежності", type: "Національні", countries: ["GEO"], startDate: "2025-05-26", endDate: "2025-05-26" },
+        { name: "День Республіки", type: "Національні", countries: ["ARM"], startDate: "2025-05-28", endDate: "2025-05-28" },
+        // JUNE
+        { name: "День захисту дітей", type: "Національні", countries: ["CHN"], startDate: "2025-06-01", endDate: "2025-06-01" },
+        { name: "День Республіки", type: "Національні", countries: ["ITA"], startDate: "2025-06-02", endDate: "2025-06-02" },
+        { name: "День Конституції", type: "Національні", countries: ["DNK"], startDate: "2025-06-05", endDate: "2025-06-05" },
+        { name: "Національний день", type: "Національні", countries: ["SWE"], startDate: "2025-06-06", endDate: "2025-06-06" },
+        { name: "День Португалії", type: "Національні", countries: ["PRT"], startDate: "2025-06-10", endDate: "2025-06-10" },
+        { name: "День Незалежності", type: "Національні", countries: ["PHL"], startDate: "2025-06-12", endDate: "2025-06-12" },
+        { name: "День молоді", type: "Національні", countries: ["ZAF"], startDate: "2025-06-16", endDate: "2025-06-16" },
+        { name: "Національний день", type: "Національні", countries: ["ISL"], startDate: "2025-06-17", endDate: "2025-06-17" },
+        { name: "Національний день", type: "Національні", countries: ["LUX"], startDate: "2025-06-23", endDate: "2025-06-23" },
+        { name: "День Незалежності", type: "Національні", countries: ["HRV", "SVN"], startDate: "2025-06-25", endDate: "2025-06-25" },
+        { name: "День Незалежності", type: "Національні", countries: ["MDG"], startDate: "2025-06-26", endDate: "2025-06-26" },
+        { name: "День Незалежності", type: "Національні", countries: ["DJI"], startDate: "2025-06-27", endDate: "2025-06-27" },
+        // JULY
+        { name: "День Канади", type: "Національні", countries: ["CAN"], startDate: "2025-07-01", endDate: "2025-07-01" },
+        { name: "День Незалежності", type: "Національні", countries: ["DZA", "CPV"], startDate: "2025-07-05", endDate: "2025-07-05" },
+        { name: "День Незалежності", type: "Національні", countries: ["SSD"], startDate: "2025-07-09", endDate: "2025-07-09" },
+        { name: "День Незалежності", type: "Національні", countries: ["BHS"], startDate: "2025-07-10", endDate: "2025-07-10" },
+        { name: "День Незалежності", type: "Національні", countries: ["STP"], startDate: "2025-07-12", endDate: "2025-07-12" },
+        { name: "День взяття Бастилії", type: "Національні", countries: ["FRA"], startDate: "2025-07-14", endDate: "2025-07-14" },
+        { name: "День Незалежності", type: "Національні", countries: ["COL"], startDate: "2025-07-20", endDate: "2025-07-20" },
+        { name: "Національний день", type: "Національні", countries: ["BEL"], startDate: "2025-07-21", endDate: "2025-07-21" },
+        { name: "День Революції", type: "Національні", countries: ["EGY"], startDate: "2025-07-23", endDate: "2025-07-23" },
+        { name: "День Незалежності", type: "Національні", countries: ["LBR", "MDV"], startDate: "2025-07-26", endDate: "2025-07-26" },
+        { name: "День Незалежності", type: "Національні", countries: ["PER"], startDate: "2025-07-28", endDate: "2025-07-28" },
+        { name: "День Трону", type: "Національні", countries: ["MAR"], startDate: "2025-07-30", endDate: "2025-07-30" },
+        // AUGUST
+        { name: "Національний день", type: "Національні", countries: ["CHE"], startDate: "2025-08-01", endDate: "2025-08-01" },
+        { name: "День Незалежності", type: "Національні", countries: ["JAM", "BOL"], startDate: "2025-08-06", endDate: "2025-08-06" },
+        { name: "Національний день", type: "Національні", countries: ["SGP"], startDate: "2025-08-09", endDate: "2025-08-09" },
+        { name: "День Незалежності", type: "Національні", countries: ["ECU"], startDate: "2025-08-10", endDate: "2025-08-10" },
+        { name: "День Незалежності", type: "Національні", countries: ["TCD"], startDate: "2025-08-11", endDate: "2025-08-11" },
+        { name: "Успіння Пресвятої Богородиці / День Незалежності", type: "Релігійні", countries: ["AUT", "BEL", "FRA", "GRC", "ITA", "POL", "PRT", "ESP"], startDate: "2025-08-15", endDate: "2025-08-15" },
+        { name: "День Незалежності (Індія) / День Визволення (Південна Корея)", type: "Національні", countries: ["IND", "KOR"], startDate: "2025-08-15", endDate: "2025-08-15" },
+        { name: "День Незалежності", type: "Національні", countries: ["IDN"], startDate: "2025-08-17", endDate: "2025-08-17" },
+        { name: "День Незалежності", type: "Національні", countries: ["AFG"], startDate: "2025-08-19", endDate: "2025-08-19" },
+        { name: "День Незалежності", type: "Національні", countries: ["UKR"], startDate: "2025-08-24", endDate: "2025-08-24" },
+        { name: "День Незалежності", type: "Національні", countries: ["URY"], startDate: "2025-08-25", endDate: "2025-08-25" },
+        { name: "День Незалежності", type: "Національні", countries: ["MDA"], startDate: "2025-08-27", endDate: "2025-08-27" },
+        { name: "День Незалежності", type: "Національні", countries: ["MYS", "TTO", "KGZ"], startDate: "2025-08-31", endDate: "2025-08-31" },
+        // SEPTEMBER
+        { name: "День Незалежності", type: "Національні", countries: ["UZB"], startDate: "2025-09-01", endDate: "2025-09-01" },
+        { name: "День Незалежності", type: "Національні", countries: ["VNM"], startDate: "2025-09-02", endDate: "2025-09-02" },
+        { name: "День Незалежності", type: "Національні", countries: ["QAT"], startDate: "2025-09-03", endDate: "2025-09-03" },
+        { name: "День Незалежності", type: "Національні", countries: ["BRA"], startDate: "2025-09-07", endDate: "2025-09-07" },
+        { name: "День Незалежності", type: "Національні", countries: ["MKD"], startDate: "2025-09-08", endDate: "2025-09-08" },
+        { name: "День Незалежності", type: "Національні", countries: ["TJK"], startDate: "2025-09-09", endDate: "2025-09-09" },
+        { name: "День Незалежності", type: "Національні", countries: ["CRI", "SLV", "GTM", "HND", "NIC"], startDate: "2025-09-15", endDate: "2025-09-15" },
+        { name: "День Незалежності", type: "Національні", countries: ["MEX", "PNG"], startDate: "2025-09-16", endDate: "2025-09-16" },
+        { name: "День Незалежності", type: "Національні", countries: ["CHL"], startDate: "2025-09-18", endDate: "2025-09-18" },
+        { name: "День Незалежності", type: "Національні", countries: ["ARM", "BLZ", "MLT"], startDate: "2025-09-21", endDate: "2025-09-21" },
+        { name: "День Незалежності", type: "Національні", countries: ["MLI"], startDate: "2025-09-22", endDate: "2025-09-22" },
+        { name: "Осіннє рівнодення", type: "Національні", countries: ["JPN"], startDate: "2025-09-23", endDate: "2025-09-23" },
+        { name: "День Незалежності", type: "Національні", countries: ["GNB"], startDate: "2025-09-24", endDate: "2025-09-24" },
+        { name: "День Незалежності", type: "Національні", countries: ["BWA"], startDate: "2025-09-30", endDate: "2025-09-30" },
+        // OCTOBER
+        { name: "Національний день", type: "Національні", countries: ["CHN", "NGA", "CYP"], startDate: "2025-10-01", endDate: "2025-10-01" },
+        { name: "День Незалежності", type: "Національні", countries: ["GIN"], startDate: "2025-10-02", endDate: "2025-10-02" },
+        { name: "День німецької єдності", type: "Національні", countries: ["DEU"], startDate: "2025-10-03", endDate: "2025-10-03" },
+        { name: "День Незалежності", type: "Національні", countries: ["LSO"], startDate: "2025-10-04", endDate: "2025-10-04" },
+        { name: "День Незалежності", type: "Національні", countries: ["UGA"], startDate: "2025-10-09", endDate: "2025-10-09" },
+        { name: "День Незалежності", type: "Національні", countries: ["FJI"], startDate: "2025-10-10", endDate: "2025-10-10" },
+        { name: "День Незалежності", type: "Національні", countries: ["GNQ"], startDate: "2025-10-12", endDate: "2025-10-12" },
+        { name: "День Незалежності", type: "Національні", countries: ["ZMB"], startDate: "2025-10-24", endDate: "2025-10-24" },
+        { name: "Національний день", type: "Національні", countries: ["AUT"], startDate: "2025-10-26", endDate: "2025-10-26" },
+        { name: "День Незалежності", type: "Національні", countries: ["TKM"], startDate: "2025-10-27", endDate: "2025-10-27" },
+        { name: "День Незалежності", type: "Національні", countries: ["CZE"], startDate: "2025-10-28", endDate: "2025-10-28" },
+        { name: "День Республіки", type: "Національні", countries: ["TUR"], startDate: "2025-10-29", endDate: "2025-10-29" },
+        // NOVEMBER
+        { name: "День усіх святих", type: "Релігійні", countries: ["AUT", "BEL", "FRA", "DEU", "ITA", "POL", "PRT", "ESP"], startDate: "2025-11-01", endDate: "2025-11-01" },
+        { name: "День Незалежності", type: "Національні", countries: ["PAN"], startDate: "2025-11-03", endDate: "2025-11-03" },
+        { name: "День Незалежності", type: "Національні", countries: ["KHM"], startDate: "2025-11-09", endDate: "2025-11-09" },
+        { name: "День Незалежності / День перемир'я", type: "Національні", countries: ["AGO", "POL"], startDate: "2025-11-11", endDate: "2025-11-11" },
+        { name: "День Незалежності", type: "Національні", countries: ["LVA"], startDate: "2025-11-18", endDate: "2025-11-18" },
+        { name: "День Незалежності", type: "Національні", countries: ["LBN"], startDate: "2025-11-22", endDate: "2025-11-22" },
+        { name: "День Незалежності", type: "Національні", countries: ["SUR"], startDate: "2025-11-25", endDate: "2025-11-25" },
+        { name: "День Незалежності", type: "Національні", countries: ["ALB", "MRT"], startDate: "2025-11-28", endDate: "2025-11-28" },
+        // DECEMBER
+        { name: "День Незалежності", type: "Національні", countries: ["ROU"], startDate: "2025-12-01", endDate: "2025-12-01" },
+        { name: "Національний день", type: "Національні", countries: ["ARE", "LAO"], startDate: "2025-12-02", endDate: "2025-12-02" },
+        { name: "День Незалежності", type: "Національні", countries: ["FIN"], startDate: "2025-12-06", endDate: "2025-12-06" },
+        { name: "Непорочне зачаття", type: "Релігійні", countries: ["AUT", "BEL", "ITA", "PRT", "ESP"], startDate: "2025-12-08", endDate: "2025-12-08" },
+        { name: "День Незалежності", type: "Національні", countries: ["TZA"], startDate: "2025-12-09", endDate: "2025-12-09" },
+        { name: "День Незалежності", type: "Національні", countries: ["KEN"], startDate: "2025-12-12", endDate: "2025-12-12" },
+        { name: "День Незалежності", type: "Національні", countries: ["KAZ", "BHR"], startDate: "2025-12-16", endDate: "2025-12-16" },
+        { name: "Національний день", type: "Національні", countries: ["BTN"], startDate: "2025-12-17", endDate: "2025-12-17" },
+        { name: "Національний день", type: "Національні", countries: ["QAT"], startDate: "2025-12-18", endDate: "2025-12-18" },
+        { name: "Різдво", type: "Релігійні", countries: ["CHE", "AUS", "NZL", "ZAF", "JAM", "RWA", "TTO", "SLE", "AUT", "CAN", "DEU", "GRC", "BGR", "NLD", "BEL", "HRV", "BIH", "KEN", "TZA", "UGA", "PHL", "KOR"], startDate: "2025-12-25", endDate: "2025-12-25" },
+        { name: "День подарунків / День Святого Стефана", type: "Національні", countries: ["AUS", "NZL", "ZAF", "CAN", "DEU", "AUT"], startDate: "2025-12-26", endDate: "2025-12-26" },
+        // RELIGIOUS (VARIABLE)
+        { name: "Рамадан", type: "Релігійні", countries: ["DZA", "BGD", "NGA", "QAT", "ARE", "KWT", "IRQ", "SAU", "JOR", "YEM", "SDN", "PAK", "IDN", "MYS", "MAR", "TUR", "SEN", "NER", "TUN", "CIV", "TGO", "GHA", "AGO", "ETH", "SLE", "GIN", "CMR", "BIH"], startDate: "2025-03-01", endDate: "2025-03-30" },
+        { name: "Ід аль-Фітр", type: "Релігійні", countries: ["DZA", "BGD", "NGA", "QAT", "ARE", "KWT", "IRQ", "SAU", "JOR", "YEM", "SDN", "PAK", "IDN", "MYS", "MAR", "TUR", "SEN", "NER", "TUN", "CIV", "TGO", "GHA", "AGO", "ETH", "SLE", "GIN", "CMR", "BIH"], startDate: "2025-03-30", endDate: "2025-03-31" },
+        { name: "Ід аль-Адха", type: "Релігійні", countries: ["DZA", "BGD", "NGA", "QAT", "ARE", "KWT", "IRQ", "SAU", "JOR", "YEM", "SDN", "PAK", "IDN", "MYS", "MAR", "TUR", "SEN", "NER", "TUN", "CIV", "TGO", "GHA", "AGO", "ETH", "SLE", "GIN", "CMR", "BIH"], startDate: "2025-06-06", endDate: "2025-06-07" },
+        { name: "Ісламський Новий рік", type: "Релігійні", countries: ["DZA", "BGD", "NGA", "QAT", "ARE", "KWT", "IRQ", "SAU", "JOR", "YEM", "SDN", "PAK", "IDN", "MYS", "MAR", "TUR", "SEN", "NER", "TUN", "CIV", "TGO", "GHA", "AGO", "ETH", "SLE", "GIN", "CMR", "BIH"], startDate: "2025-06-26", endDate: "2025-06-26" },
+        { name: "Мавлід ан-Набі", type: "Релігійні", countries: ["DZA", "BGD", "NGA", "QAT", "ARE", "KWT", "IRQ", "SAU", "JOR", "YEM", "SDN", "PAK", "IDN", "MYS", "MAR", "TUR", "SEN", "NER", "TUN", "CIV", "TGO", "GHA", "AGO", "ETH", "SLE", "GIN", "CMR", "BIH"], startDate: "2025-09-04", endDate: "2025-09-04" },
+        { name: "Песах", type: "Релігійні", countries: ["ISR"], startDate: "2025-04-13", endDate: "2025-04-20" },
+        { name: "Рош га-Шана", type: "Релігійні", countries: ["ISR"], startDate: "2025-09-16", endDate: "2025-09-17" },
+        { name: "Йом-Кіпур", type: "Релігійні", countries: ["ISR"], startDate: "2025-09-25", endDate: "2025-09-25" },
+        { name: "Суккот", type: "Релігійні", countries: ["ISR"], startDate: "2025-09-30", endDate: "2025-10-06" },
+        { name: "Весак", type: "Релігійні", countries: ["THA", "KHM", "MMR", "LKA", "VNM"], startDate: "2025-05-12", endDate: "2025-05-12" },
+        { name: "Асалха Пуджа", type: "Релігійні", countries: ["THA", "KHM", "MMR", "LKA", "VNM"], startDate: "2025-07-10", endDate: "2025-07-10" },
+        { name: "Буддійський піст", type: "Релігійні", countries: ["THA", "KHM", "MMR", "LKA", "VNM"], startDate: "2025-07-11", endDate: "2025-10-08" },
+        { name: "Холі", type: "Релігійні", countries: ["IND", "NPL", "MUS", "TTO", "SGP", "MYS"], startDate: "2025-03-14", endDate: "2025-03-14" },
+        { name: "Дівалі", type: "Релігійні", countries: ["IND", "NPL", "MUS", "TTO", "SGP", "MYS"], startDate: "2025-10-20", endDate: "2025-10-20" },
+        { name: "Дуссера", type: "Релігійні", countries: ["IND", "NPL", "MUS", "TTO", "SGP", "MYS"], startDate: "2025-10-02", endDate: "2025-10-02" },
+        // AGRICULTURAL
+        { name: "Збір рису (Азія)", type: "Агрономічні", countries: ["BGD", "KHM", "CHN", "IND", "IDN", "JPN", "LAO", "MYS", "MMR", "NPL", "PAK", "PHL", "KOR", "LKA", "TWN", "THA", "VNM"], startDate: "2025-09-01", endDate: "2025-11-30" },
+        { name: "Збір пшениці (Північна півкуля)", type: "Агрономічні", countries: ["CAN", "CHN", "FRA", "DEU", "IND", "KAZ", "PAK", "POL", "ROU", "TUR", "UKR", "USA"], startDate: "2025-06-01", endDate: "2025-08-31" },
+        { name: "Збір кукурудзи (Африка)", type: "Агрономічні", countries: ["AGO", "BEN", "BFA", "CMR", "TCD", "CIV", "COD", "ETH", "GHA", "GIN", "KEN", "MWI", "MLI", "MOZ", "NER", "NGA", "RWA", "SEN", "SLE", "SOM", "ZAF", "SSD", "SDN", "TZA", "TGO", "UGA", "ZMB", "ZWE"], startDate: "2025-04-01", endDate: "2025-07-31" },
+        { name: "Збір бавовни", type: "Агрономічні", countries: ["AUS", "BEN", "BRA", "BFA", "CMR", "CHN", "CIV", "EGY", "GRC", "IND", "KAZ", "MLI", "MEX", "NGA", "PAK", "SDN", "TJK", "TZA", "TUR", "TKM", "UGA", "USA", "UZB"], startDate: "2025-09-01", endDate: "2025-12-31" },
+        { name: "Весняна посівна (Північна півкуля)", type: "Агрономічні", countries: ["CAN", "CHN", "FRA", "DEU", "IND", "KAZ", "PAK", "POL", "ROU", "TUR", "UKR", "USA"], startDate: "2025-03-01", endDate: "2025-05-31" },
+        { name: "Мусонна посівна (Південна Азія)", type: "Агрономічні", countries: ["BGD", "BTN", "IND", "NPL", "PAK", "LKA"], startDate: "2025-06-01", endDate: "2025-07-31" },
+        { name: "Зимова посівна (Південна півкуля)", type: "Агрономічні", countries: ["ARG", "AUS", "BRA", "CHL", "NZL", "PRY", "ZAF", "URY"], startDate: "2025-04-01", endDate: "2025-06-30" },
+    ];
+    const countryMap = { "AFG": { name: "Афганістан", flag: "🇦🇫" }, "ALB": { name: "Албанія", flag: "🇦🇱" }, "DZA": { name: "Алжир", flag: "🇩🇿" }, "AGO": { name: "Ангола", flag: "🇦🇴" }, "ARG": { name: "Аргентина", flag: "🇦🇷" }, "ARM": { name: "Вірменія", flag: "🇦🇲" }, "AUS": { name: "Австралія", flag: "🇦🇺" }, "AUT": { name: "Австрія", flag: "🇦🇹" }, "BGD": { name: "Бангладеш", flag: "🇧🇩" }, "BHS": { name: "Багами", flag: "🇧🇸" }, "BHR": { name: "Бахрейн", flag: "🇧🇭" }, "BEL": { name: "Бельгія", flag: "�🇪" }, "BLZ": { name: "Беліз", flag: "🇧🇿" }, "BEN": { name: "Бенін", flag: "🇧🇯" }, "BTN": { name: "Бутан", flag: "🇧🇹" }, "BOL": { name: "Болівія", flag: "🇧🇴" }, "BIH": { name: "Боснія і Герцеговина", flag: "🇧🇦" }, "BWA": { name: "Ботсвана", flag: "🇧🇼" }, "BRA": { name: "Бразилія", flag: "🇧🇷" }, "BRN": { name: "Бруней", flag: "🇧🇳" }, "BGR": { name: "Болгарія", flag: "🇧🇬" }, "BFA": { name: "Буркіна-Фасо", flag: "🇧🇫" }, "BDI": { name: "Бурунді", flag: "🇧🇮" }, "KHM": { name: "Камбоджа", flag: "🇰🇭" }, "CMR": { name: "Камерун", flag: "🇨🇲" }, "CAN": { name: "Канада", flag: "🇨🇦" }, "CPV": { name: "Кабо-Верде", flag: "🇨🇻" }, "CAF": { name: "Центральноафриканська Республіка", flag: "🇨🇫" }, "TCD": { name: "Чад", flag: "🇹🇩" }, "CHL": { name: "Чилі", flag: "🇨🇱" }, "CHN": { name: "Китай", flag: "🇨🇳" }, "COL": { name: "Колумбія", flag: "🇨🇴" }, "COM": { name: "Коморські Острови", flag: "🇰🇲" }, "COG": { name: "Республіка Конго", flag: "🇨🇬" }, "COD": { name: "ДР Конго", flag: "🇨🇩" }, "CRI": { name: "Коста-Рика", flag: "🇨🇷" }, "CIV": { name: "Кот-д'Івуар", flag: "🇨🇮" }, "HRV": { name: "Хорватія", flag: "🇭🇷" }, "CYP": { name: "Кіпр", flag: "🇨🇾" }, "CZE": { name: "Чехія", flag: "🇨🇿" }, "DNK": { name: "Данія", flag: "🇩🇰" }, "DJI": { name: "Джибуті", flag: "🇩🇯" }, "ECU": { name: "Еквадор", flag: "🇪🇨" }, "EGY": { name: "Єгипет", flag: "🇪🇬" }, "SLV": { name: "Сальвадор", flag: "🇸🇻" }, "GNQ": { name: "Екваторіальна Гвінея", flag: "🇬🇶" }, "ERI": { name: "Еритрея", flag: "🇪🇷" }, "EST": { name: "Естонія", flag: "🇪🇪" }, "SWZ": { name: "Есватіні", flag: "🇸🇿" }, "ETH": { name: "Ефіопія", flag: "🇪🇹" }, "FJI": { name: "Фіджі", flag: "🇫🇯" }, "FIN": { name: "Фінляндія", flag: "🇫🇮" }, "FRA": { name: "Франція", flag: "🇫🇷" }, "GAB": { name: "Габон", flag: "🇬🇦" }, "GMB": { name: "Гамбія", flag: "🇬🇲" }, "GEO": { name: "Грузія", flag: "🇬🇪" }, "DEU": { name: "Німеччина", flag: "🇩🇪" }, "GHA": { name: "Гана", flag: "🇬🇭" }, "GRC": { name: "Греція", flag: "🇬🇷" }, "GTM": { name: "Гватемала", flag: "🇬🇹" }, "GIN": { name: "Гвінея", flag: "🇬🇳" }, "GNB": { name: "Гвінея-Бісау", flag: "🇬🇼" }, "HND": { name: "Гондурас", flag: "🇭🇳" }, "HUN": { name: "Угорщина", flag: "🇭🇺" }, "ISL": { name: "Ісландія", flag: "🇮🇸" }, "IND": { name: "Індія", flag: "🇮🇳" }, "IDN": { name: "Індонезія", flag: "🇮🇩" }, "IRQ": { name: "Ірак", flag: "🇮🇶" }, "IRL": { name: "Ірландія", flag: "🇮🇪" }, "ISR": { name: "Ізраїль", flag: "🇮🇱" }, "ITA": { name: "Італія", flag: "🇮🇹" }, "JAM": { name: "Ямайка", flag: "🇯🇲" }, "JPN": { name: "Японія", flag: "🇯🇵" }, "JOR": { name: "Йорданія", flag: "🇯🇴" }, "KAZ": { name: "Казахстан", flag: "🇰🇿" }, "KEN": { name: "Кенія", flag: "🇰🇪" }, "XKX": { name: "Косово", flag: "🇽🇰" }, "KWT": { name: "Кувейт", flag: "🇰🇼" }, "KGZ": { name: "Киргизстан", flag: "🇰🇬" }, "LAO": { name: "Лаос", flag: "🇱🇦" }, "LVA": { name: "Латвія", flag: "🇱🇻" }, "LBN": { name: "Ліван", flag: "🇱🇧" }, "LSO": { name: "Лесото", flag: "🇱🇸" }, "LBR": { name: "Ліберія", flag: "🇱🇷" }, "LBY": { name: "Лівія", flag: "🇱🇾" }, "LTU": { name: "Литва", flag: "🇱🇹" }, "LUX": { name: "Люксембург", flag: "🇱🇺" }, "MDG": { name: "Мадагаскар", flag: "🇲🇬" }, "MWI": { name: "Малаві", flag: "🇲🇼" }, "MYS": { name: "Малайзія", flag: "🇲🇾" }, "MDV": { name: "Мальдіви", flag: "🇲🇻" }, "MLI": { name: "Малі", flag: "🇲🇱" }, "MLT": { name: "Мальта", flag: "🇲🇹" }, "MRT": { name: "Мавританія", flag: "🇲🇷" }, "MUS": { name: "Маврикій", flag: "🇲🇺" }, "MEX": { name: "Мексика", flag: "🇲🇽" }, "MDA": { name: "Молдова", flag: "🇲🇩" }, "MAR": { name: "Марокко", flag: "🇲🇦" }, "MOZ": { name: "Мозамбік", flag: "🇲🇿" }, "MMR": { name: "М'янма", flag: "🇲🇲" }, "NAM": { name: "Намібія", flag: "🇳🇦" }, "NPL": { name: "Непал", flag: "🇳🇵" }, "NLD": { name: "Нідерланди", flag: "🇳🇱" }, "NZL": { name: "Нова Зеландія", flag: "🇳🇿" }, "NIC": { name: "Нікарагуа", flag: "🇳🇮" }, "NER": { name: "Нігер", flag: "🇳🇪" }, "NGA": { name: "Нігерія", flag: "🇳🇬" }, "MKD": { name: "Північна Македонія", flag: "🇲🇰" }, "NOR": { name: "Норвегія", flag: "🇳🇴" }, "PAK": { name: "Пакистан", flag: "🇵🇰" }, "PAN": { name: "Панама", flag: "🇵🇦" }, "PNG": { name: "Папуа - Нова Гвінея", flag: "🇵🇬" }, "PRY": { name: "Парагвай", flag: "🇵🇾" }, "PER": { name: "Перу", flag: "🇵🇪" }, "PHL": { name: "Філіппіни", flag: "🇵🇭" }, "POL": { name: "Польща", flag: "🇵🇱" }, "PRT": { name: "Португалія", flag: "🇵🇹" }, "QAT": { name: "Катар", flag: "🇶🇦" }, "ROU": { name: "Румунія", flag: "🇷🇴" }, "RWA": { name: "Руанда", flag: "🇷🇼" }, "STP": { name: "Сан-Томе і Принсіпі", flag: "🇸🇹" }, "SAU": { name: "Саудівська Аравія", flag: "🇸🇦" }, "SEN": { name: "Сенегал", flag: "🇸🇳" }, "SRB": { name: "Сербія", flag: "🇷🇸" }, "SYC": { name: "Сейшельські Острови", flag: "🇸🇨" }, "SLE": { name: "Сьєрра-Леоне", flag: "🇸🇱" }, "SGP": { name: "Сінгапур", flag: "🇸🇬" }, "SVK": { name: "Словаччина", flag: "🇸🇰" }, "SVN": { name: "Словенія", flag: "🇸🇮" }, "SOM": { name: "Сомалі", flag: "🇸🇴" }, "ZAF": { name: "ПАР", flag: "🇿🇦" }, "KOR": { name: "Південна Корея", flag: "🇰🇷" }, "SSD": { name: "Південний Судан", flag: "🇸🇸" }, "ESP": { name: "Іспанія", flag: "🇪🇸" }, "LKA": { name: "Шрі-Ланка", flag: "🇱🇰" }, "SDN": { name: "Судан", flag: "🇸🇩" }, "SUR": { name: "Суринам", flag: "🇸🇷" }, "SWE": { name: "Швеція", flag: "🇸🇪" }, "CHE": { name: "Швейцарія", flag: "🇨🇭" }, "SYR": { name: "Сирія", flag: "🇸🇾" }, "TWN": { name: "Тайвань", flag: "🇹🇼" }, "TJK": { name: "Таджикистан", flag: "🇹🇯" }, "TZA": { name: "Танзанія", flag: "🇹🇿" }, "THA": { name: "Таїланд", flag: "🇹🇭" }, "TGO": { name: "Того", flag: "🇹🇬" }, "TTO": { name: "Тринідад і Тобаго", flag: "🇹🇹" }, "TUN": { name: "Туніс", flag: "🇹🇳" }, "TUR": { name: "Туреччина", flag: "🇹🇷" }, "TKM": { name: "Туркменістан", flag: "🇹🇲" }, "UGA": { name: "Уганда", flag: "🇺🇬" }, "UKR": { name: "Україна", flag: "🇺🇦" }, "ARE": { name: "ОАЕ", flag: "🇦🇪" }, "GBR": { name: "Велика Британія", flag: "🇬🇧" }, "GB-SCT": { name: "Шотландія (ВБ)", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿" }, "USA": { name: "США", flag: "🇺🇸" }, "URY": { name: "Уругвай", flag: "🇺🇾" }, "UZB": { name: "Узбекистан", flag: "🇺🇿" }, "VNM": { name: "В'єтнам", flag: "🇻🇳" }, "YEM": { name: "Ємен", flag: "🇾🇪" }, "ZMB": { name: "Замбія", flag: "🇿🇲" }, "ZWE": { name: "Зімбабве", flag: "🇿🇼" } };
+    const monthNames = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"];
+    // BUG FIX: Corrected day names order to start with Monday for proper grid alignment.
+    const dayNames = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
 
-            // Глобальні змінні
-            const monthNames = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"];
-            const dayNames = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
-            const year = 2025;
-            
-            // Елементи DOM
-            const yearView = document.getElementById('year-view');
-            const monthView = document.getElementById('month-view');
-            const dayView = document.getElementById('day-view');
-            const breadcrumbs = document.getElementById('breadcrumbs');
-            const filtersPanel = document.getElementById('filters');
-            const tooltip = document.getElementById('tooltip');
-            const holidayCounter = document.getElementById('holiday-counter');
-            const countryFilterButton = document.getElementById('country-filter-button');
-            const countryFilterDropdown = document.getElementById('country-filter-dropdown');
-            const countrySearchInput = document.getElementById('country-search-input');
-            const countryList = document.getElementById('country-list');
-            const selectedCountryName = document.getElementById('selected-country-name');
-            const selectedCountryFlag = document.getElementById('selected-country-flag');
-            const typeFilters = document.querySelectorAll('.type-filter');
-            const searchFilter = document.getElementById('search-filter');
-            const clearFiltersBtn = document.getElementById('clear-filters-btn');
+    // --- STATE ---
+    let state = {
+        view: 'year', // 'year', 'month'
+        selectedMonth: null,
+        filters: { country: '', types: [], search: '' },
+        filteredHolidays: []
+    };
 
-            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            let activeTooltipDay = null;
-            let state = { view: 'year', monthIndex: null, dateStr: null };
-            
-            // Коди країн для прапорів
-            const countryCodes = {"Афганістан":"af","Албанія":"al","Алжир":"dz","Ангола":"ao","Вірменія":"am","Австралія":"au","Австрія":"at","Багами":"bs","Бахрейн":"bh","Бангладеш":"bd","Бельгія":"be","Беліз":"bz","Бенін":"bj","Бутан":"bt","Болівія":"bo","Боснія і Герцеговина":"ba","Ботсвана":"bw","Бразилія":"br","Бруней":"bn","Болгарія":"bg","Камбоджа":"kh","Камерун":"cm","Канада":"ca","Кабо-Верде":"cv","Чад":"td","Чилі":"cl","Китай":"cn","Колумбія":"co","Коста-Рика":"cr","Кот-д'Івуар":"ci","Хорватія":"hr","Кіпр":"cy","Чехія":"cz","Данія":"dk","Джибуті":"dj","Еквадор":"ec","Єгипет":"eg","Сальвадор":"sv","Екваторіальна Гвінея":"gq","Еритрея":"er","Естонія":"ee","Ефіопія":"et","Фіджі":"fj","Фінляндія":"fi","Франція":"fr","Гамбія":"gm","Грузія":"ge","Німеччина":"de","Гана":"gh","Греція":"gr","Гватемала":"gt","Гвінея":"gn","Гвінея-Бісау":"gw","Гондурас":"hn","Ісландія":"is","Індія":"in","Індонезія":"id","Ірландія":"ie","Ізраїль":"il","Італія":"it","Ямайка":"jm","Японія":"jp","Казахстан":"kz","Кенія":"ke","Косово":"xk","Кувейт":"kw","Киргизстан":"kg","Лаос":"la","Латвія":"lv","Ліван":"lb","Лесото":"ls","Ліберія":"lr","Литва":"lt","Люксембург":"lu","Мадагаскар":"mg","Малайзія":"my","Мальдіви":"mv","Малі":"ml","Мальта":"mt","Мавританія":"mr","Маврикій":"mu","Мексика":"mx","Молдова":"md","Марокко":"ma","Мозамбік":"mz","М'янма":"mm","Непал":"np","Нідерланди":"nl","Нова Зеландія":"nz","Нікарагуа":"ni","Нігер":"ne","Нігерія":"ng","Північна Македонія":"mk","Норвегія":"no","Пакистан":"pk","Панама":"pa","Папуа-Нова Гвінея":"pg","Перу":"pe","Філіппіни":"ph","Польща":"pl","Португалія":"pt","Катар":"qa","Румунія":"ro","Руанда":"rw","Сан-Томе і Принсіпі":"st","Саудівська Аравія":"sa","Сенегал":"sn","Сербія":"rs","Сьєрра-Леоне":"sl","Сінгапур":"sg","Словенія":"si","ПАР":"za","Південна Корея":"kr","Південний Судан":"ss","Іспанія":"es","Шрі-Ланка":"lk","Судан":"sd","Суринам":"sr","Швеція":"se","Швейцарія":"ch","Сирія":"sy","Тайвань":"tw","Таджикистан":"tj","Танзанія":"tz","Таїланд":"th","Того":"tg","Тринідад і Тобаго":"tt","Туніс":"tn","Туреччина":"tr","Туркменістан":"tm","Уганда":"ug","Україна":"ua","ОАЕ":"ae","Велика Британія":"gb","Уругвай":"uy","Узбекистан":"uz","В'єтнам":"vn","Ємен":"ye","Замбія":"zm","Зімбабве":"zw"};
+    // --- DOM ELEMENTS ---
+    const yearView = document.getElementById('year-view');
+    const monthView = document.getElementById('month-view');
+    const breadcrumbs = document.getElementById('breadcrumbs');
+    const countryFilter = document.getElementById('country-filter');
+    const typeFilterContainer = document.getElementById('type-filter');
+    const searchInput = document.getElementById('search-input');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+    const holidayCounter = document.getElementById('holiday-counter');
+    const dayModal = document.getElementById('day-modal');
+    const modalContentArea = document.getElementById('modal-content-area');
+    const modalOverlay = document.getElementById('modal-overlay');
 
-            function switchView(newView, options = {}) {
-                state.view = newView;
-                state.monthIndex = options.monthIndex ?? state.monthIndex;
-                state.dateStr = options.dateStr ?? state.dateStr;
+    // --- FUNCTIONS ---
 
-                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                document.getElementById(`${newView}-view`).classList.add('active');
+    function init() {
+        populateCountryFilter();
+        setupEventListeners();
+        applyFiltersAndRender();
+    }
 
-                if (newView === 'day') {
-                    filtersPanel.classList.add('hidden');
-                    holidayCounter.parentElement.classList.add('hidden');
-                } else {
-                    filtersPanel.style.display = 'grid';
-                    holidayCounter.parentElement.style.display = 'block';
-                }
-
-                renderContent();
-                renderBreadcrumbs();
-            }
-
-            function renderContent() {
-                if (state.view === 'year') {
-                    renderYearView();
-                } else if (state.view === 'month') {
-                    renderMonthView(state.monthIndex);
-                } else if (state.view === 'day') {
-                    renderDayView(state.dateStr);
-                }
-            }
-
-            function renderBreadcrumbs() {
-                breadcrumbs.innerHTML = '';
-                const yearLink = document.createElement('span');
-                yearLink.textContent = 'Річний огляд';
-                yearLink.className = 'breadcrumb-link';
-                yearLink.onclick = () => switchView('year');
-                breadcrumbs.appendChild(yearLink);
-
-                if (state.view === 'month' || state.view === 'day') {
-                    breadcrumbs.innerHTML += ' / ';
-                    const monthLink = document.createElement('span');
-                    monthLink.textContent = monthNames[state.monthIndex];
-                    monthLink.className = 'breadcrumb-link';
-                    monthLink.onclick = () => switchView('month', { monthIndex: state.monthIndex });
-                    breadcrumbs.appendChild(monthLink);
-                }
-
-                if (state.view === 'day') {
-                    breadcrumbs.innerHTML += ' / ';
-                    const dayLink = document.createElement('span');
-                    dayLink.textContent = new Date(state.dateStr).getDate();
-                    breadcrumbs.appendChild(dayLink);
-                }
-            }
-
-            function renderYearView() {
-                yearView.innerHTML = '';
-                const today = new Date();
-                const currentMonthIndex = today.getMonth();
-                const currentYear = today.getFullYear();
-
-                monthNames.forEach((monthIndex, i) => {
-                    const monthDiv = document.createElement('div');
-                    monthDiv.className = `panel p-4`;
-                    if(i === currentMonthIndex && year === currentYear) {
-                        monthDiv.classList.add('current-month-glow');
-                    }
-                    
-                    const header = document.createElement('div');
-                    header.className = `month-header month-header-clickable p-3 -m-4 mb-4 font-bold text-xl text-center`;
-                    header.style.borderTopLeftRadius = '12px';
-                    header.style.borderTopRightRadius = '12px';
-                    header.textContent = `${monthIndex}`;
-                    header.onclick = () => switchView('month', { monthIndex: i });
-                    monthDiv.appendChild(header);
-
-                    const grid = document.createElement('div');
-                    grid.className = 'grid grid-cols-7 gap-1 flex-grow';
-                    
-                    dayNames.forEach(day => {
-                        grid.appendChild(Object.assign(document.createElement('div'), { className: 'text-center font-semibold text-gray-500 text-xs py-1', textContent: day }));
-                    });
-
-                    const daysInMonth = new Date(year, i + 1, 0).getDate();
-                    const startOffset = (new Date(year, i, 1).getDay() === 0) ? 6 : new Date(year, i, 1).getDay() - 1;
-
-                    for (let j = 0; j < startOffset; j++) {
-                        grid.appendChild(document.createElement('div'));
-                    }
-
-                    for (let day = 1; day <= daysInMonth; day++) {
-                        const dayCell = document.createElement('div');
-                        dayCell.className = 'calendar-day relative flex items-center justify-center h-8 text-sm';
-                        const dateStr = `${year}-${String(i + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                        dayCell.textContent = day;
-                        if (holidays[dateStr]) {
-                             dayCell.classList.add('has-holiday', 'font-bold', 'text-blue-600');
-                        }
-                        grid.appendChild(dayCell);
-                    }
-                    monthDiv.appendChild(grid);
-                    yearView.appendChild(monthDiv);
-                });
-                updateFilteredHolidays();
-            }
-
-            function renderMonthView(monthIndex) {
-                monthView.innerHTML = '';
-                const monthDiv = document.createElement('div');
-                monthDiv.className = 'panel p-6';
-                
-                const header = document.createElement('div');
-                header.className = 'month-header p-4 -m-6 mb-6 font-bold text-2xl text-center';
-                header.style.borderTopLeftRadius = '12px';
-                header.style.borderTopRightRadius = '12px';
-                header.textContent = `${monthNames[monthIndex]} ${year}`;
-                monthDiv.appendChild(header);
-                
-                const grid = document.createElement('div');
-                grid.className = 'grid grid-cols-7 gap-2';
-
-                dayNames.forEach(day => {
-                    grid.appendChild(Object.assign(document.createElement('div'), { className: 'text-center font-bold text-gray-600 pb-2', textContent: day }));
-                });
-
-                const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-                const startOffset = (new Date(year, monthIndex, 1).getDay() === 0) ? 6 : new Date(year, monthIndex, 1).getDay() - 1;
-
-                for (let i = 0; i < startOffset; i++) {
-                    grid.appendChild(document.createElement('div'));
-                }
-
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const dayCell = createDayCell(day, monthIndex, 'month');
-                    grid.appendChild(dayCell);
-                }
-                monthDiv.appendChild(grid);
-                monthView.appendChild(monthDiv);
-                updateFilteredHolidays();
-            }
-            
-            function renderDayView(dateStr) {
-                dayView.innerHTML = '';
-                const date = new Date(dateStr);
-                const day = date.getDate();
-                const monthIndex = date.getMonth();
-                const weekday = date.toLocaleDateString('uk-UA', { weekday: 'long' });
-
-                const panel = document.createElement('div');
-                panel.className = 'panel p-6 max-w-2xl mx-auto';
-                
-                panel.innerHTML = `
-                    <div class="text-center mb-4">
-                        <h2 class="text-5xl font-bold">${day}</h2>
-                        <p class="text-xl text-gray-500">${monthNames[monthIndex]}, ${weekday}</p>
-                    </div>
-                    <div id="day-holidays-list"></div>
-                `;
-                
-                dayView.appendChild(panel);
-                const list = document.getElementById('day-holidays-list');
-                const dayHolidays = holidays[dateStr] || [];
-
-                if(dayHolidays.length > 0) {
-                    dayHolidays.forEach(h => {
-                        const holidayEl = document.createElement('div');
-                        holidayEl.className = 'p-4 border-t border-gray-200';
-                        
-                        let typeColorClass = '';
-                        if (h.type === 'red') typeColorClass = 'text-red-500';
-                        if (h.type === 'purple') typeColorClass = 'text-purple-500';
-                        if (h.type === 'green') typeColorClass = 'text-green-500';
-
-                        holidayEl.innerHTML = `
-                            <h3 class="text-lg font-semibold ${typeColorClass}">${h.name}</h3>
-                            <p class="text-sm text-gray-500">${h.countries.join(', ')}</p>
-                        `;
-                        list.appendChild(holidayEl);
-                    });
-                } else {
-                    list.innerHTML = `<p class="text-center text-gray-500 py-4">На цей день немає запланованих свят.</p>`;
-                }
-            }
-
-            function createDayCell(day, monthIndex, viewType) {
-                const dayCell = document.createElement('div');
-                const date = new Date(year, monthIndex, day);
-                const dayOfWeek = date.getDay();
-                dayCell.className = `calendar-day relative flex items-center justify-center h-16 cursor-pointer`;
-                
-                if (dayOfWeek === 6 || dayOfWeek === 0) dayCell.classList.add('weekend');
-
-                const dayNumber = Object.assign(document.createElement('span'), { textContent: day, className: 'z-10' });
-                dayCell.appendChild(dayNumber);
-
-                const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                dayCell.dataset.date = dateStr;
-
-                if (dateStr === new Date().toISOString().slice(0, 10)) dayCell.classList.add('today');
-                
-                if (holidays[dateStr]) {
-                    dayCell.classList.add('has-holiday');
-                    dayCell.dataset.holidays = JSON.stringify(holidays[dateStr]);
-                    
-                    if(viewType === 'month') {
-                        dayCell.onclick = () => switchView('day', { dateStr, monthIndex });
-                        if (isTouchDevice) {
-                            dayCell.addEventListener('touchstart', (e) => {
-                                if (e.touches.length === 1) { // Single touch
-                                    activeTooltipDay = setTimeout(() => showTooltip(e, dayCell), 500); // Long press
-                                }
-                            });
-                            dayCell.addEventListener('touchend', () => clearTimeout(activeTooltipDay));
-                            dayCell.addEventListener('touchmove', () => clearTimeout(activeTooltipDay));
-                        } else {
-                            dayCell.addEventListener('mouseenter', (e) => showTooltip(e, dayCell));
-                            dayCell.addEventListener('mouseleave', hideTooltip);
-                            dayCell.addEventListener('mousemove', moveTooltip);
-                        }
-                    }
-                }
-                return dayCell;
-            }
-
-            function updateFilteredHolidays(isSearch = false) {
-                const selectedCountry = filtersPanel.dataset.selectedCountry;
-                const selectedTypes = Array.from(typeFilters).filter(cb => cb.checked).map(cb => cb.value);
-                const searchQuery = searchFilter.value.toLowerCase();
-                let firstFoundElement = null;
-                let visibleHolidaysCount = 0;
-
-                document.querySelectorAll('.calendar-day').forEach(dayCell => {
-                    dayCell.classList.remove('search-highlight');
-                    dayCell.querySelector('.holiday-markers')?.remove();
-                    dayCell.style.opacity = '1';
-                    dayCell.dataset.tooltipContent = '';
-                    
-                    if (!dayCell.classList.contains('has-holiday')) return;
-
-                    const cellHolidays = JSON.parse(dayCell.dataset.holidays);
-                    
-                    const filteredHolidays = cellHolidays.filter(h => {
-                        const countryMatch = selectedCountry === 'all' || h.countries.includes(selectedCountry) || h.countries.some(c => c.includes(selectedCountry));
-                        const typeMatch = selectedTypes.includes(h.type);
-                        const searchMatch = searchQuery === '' || h.name.toLowerCase().includes(searchQuery);
-                        return countryMatch && typeMatch && searchMatch;
-                    });
-
-                    if (filteredHolidays.length > 0) {
-                        visibleHolidaysCount += filteredHolidays.length;
-                        dayCell.dataset.tooltipContent = filteredHolidays.map((h, index) => `
-                            <div class="${index > 0 ? 'mt-2 pt-2 border-t border-gray-700' : ''}">
-                                <strong class="block">${h.name}</strong>
-                                <span class="text-xs text-gray-400">${h.countries.join(', ')}</span>
-                            </div>`).join('');
-                        
-                        if (searchQuery.length > 0 && !firstFoundElement) {
-                            firstFoundElement = dayCell;
-                            dayCell.classList.add('search-highlight');
-                        }
-                        
-                        const markersDiv = document.createElement('div');
-                        markersDiv.className = 'holiday-markers absolute bottom-1 left-1/2 -translate-x-1/2 flex space-x-1';
-                        const uniqueTypes = [...new Set(filteredHolidays.map(h => h.type))];
-                        
-                        uniqueTypes.forEach(type => {
-                            const marker = document.createElement('div');
-                            if (type === 'red') marker.className = 'w-2 h-2 rounded-full bg-red-500';
-                            if (type === 'purple') marker.className = 'w-2 h-2 rounded-full bg-purple-500';
-                            if (type === 'green') marker.className = 'w-2 h-2 rounded-full bg-green-500';
-                            markersDiv.appendChild(marker);
-                        });
-                        dayCell.appendChild(markersDiv);
-                    } else {
-                        dayCell.style.opacity = '0.5';
-                    }
-                });
-                
-                holidayCounter.textContent = `Знайдено: ${visibleHolidaysCount} свят`;
-                if (isSearch && firstFoundElement) {
-                    firstFoundElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }
-
-            function showTooltip(event, element) {
-                const content = element.dataset.tooltipContent;
-                if (content) {
-                    tooltip.innerHTML = content;
-                    tooltip.style.display = 'block';
-                    moveTooltip(event);
-                }
-            }
-
-            function hideTooltip() {
-                if (!isTouchDevice) {
-                    tooltip.style.display = 'none';
-                }
-            }
-            
-            function toggleTooltip(event, element) {
-                hideTooltip(); // Hide any existing tooltips
-                event.preventDefault(); // Prevent navigation on tap
-                showTooltip(event, element);
-                setTimeout(hideTooltip, 2000); // Hide after 2 seconds
-            }
-
-            function moveTooltip(event) {
-                const e = event.touches ? event.touches[0] : event;
-                let x = e.clientX + 15;
-                let y = e.clientY + 15;
-
-                if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - 15;
-                if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - 15;
-
-                tooltip.style.left = `${x}px`;
-                tooltip.style.top = `${y}px`;
-            }
-            
-            function resetFilters() {
-                selectCountry('all', 'Всі країни');
-                searchFilter.value = '';
-                typeFilters.forEach(cb => cb.checked = true);
-                updateFilteredHolidays();
-            }
-
-            function init() {
-                populateCountryFilter();
-                switchView('year');
-
-                typeFilters.forEach(cb => cb.addEventListener('change', () => updateFilteredHolidays()));
-                searchFilter.addEventListener('input', () => updateFilteredHolidays(true));
-                clearFiltersBtn.addEventListener('click', resetFilters);
-                
-                countryFilterButton.addEventListener('click', () => countryFilterDropdown.classList.toggle('hidden'));
-                countrySearchInput.addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    countryList.querySelectorAll('li').forEach(li => {
-                        const countryName = li.textContent.toLowerCase();
-                        li.style.display = countryName.includes(searchTerm) ? 'flex' : 'none';
-                    });
-                });
-
-                document.addEventListener('click', (e) => {
-                    if (!countryFilterButton.contains(e.target) && !countryFilterDropdown.contains(e.target)) {
-                        countryFilterDropdown.classList.add('hidden');
-                    }
-                });
-            }
-
-            init();
+    // BUG FIX: Re-added missing function
+    function populateCountryFilter() {
+        const countries = Object.entries(countryMap)
+            .sort(([, a], [, b]) => a.name.localeCompare(b.name, 'uk'));
+        
+        countries.forEach(([code, { name, flag }]) => {
+            const option = document.createElement('option');
+            option.value = code;
+            option.textContent = `${flag} ${name}`;
+            countryFilter.appendChild(option);
         });
-    </script>
+    }
+
+    function setupEventListeners() {
+        countryFilter.addEventListener('change', handleFilterChange);
+        typeFilterContainer.addEventListener('change', handleFilterChange);
+        searchInput.addEventListener('input', handleFilterChange);
+        clearFiltersBtn.addEventListener('click', resetFilters);
+        
+        // IMPROVEMENT: Event delegation for views
+        yearView.addEventListener('click', handleYearViewClick);
+        monthView.addEventListener('click', handleMonthViewClick);
+
+        // IMPROVEMENT: Modal close events
+        modalOverlay.addEventListener('click', hideDayModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") hideDayModal();
+        });
+    }
+    
+    function handleFilterChange() {
+        const wasInYearView = state.view === 'year';
+        state.filters.country = countryFilter.value;
+        state.filters.types = Array.from(typeFilterContainer.querySelectorAll('input:checked')).map(cb => cb.value);
+        state.filters.search = searchInput.value.toLowerCase();
+        
+        applyFiltersAndRender();
+        
+        // IMPROVEMENT: Smarter search from year view
+        if (wasInYearView && state.filters.search) {
+            navigateToFirstSearchResult();
+        }
+    }
+    
+    function resetFilters() {
+        countryFilter.value = '';
+        typeFilterContainer.querySelectorAll('input').forEach(cb => cb.checked = false);
+        searchInput.value = '';
+        // If not in year view, go back to it on clear
+        if (state.view !== 'year') {
+            state.view = 'year';
+            state.selectedMonth = null;
+        }
+        handleFilterChange();
+    }
+
+    function applyFiltersAndRender() {
+        // ... filtering logic ...
+        let result = holidays;
+        if (state.filters.country) result = result.filter(h => h.countries.includes(state.filters.country));
+        if (state.filters.types.length > 0) result = result.filter(h => state.filters.types.includes(h.type));
+        if (state.filters.search) result = result.filter(h => h.name.toLowerCase().includes(state.filters.search));
+        state.filteredHolidays = result;
+        
+        updateHolidayCounter(state.filteredHolidays.length);
+        render();
+    }
+
+    function updateHolidayCounter(count) {
+        const isDefaultState = holidays.length === count && !state.filters.country && state.filters.types.length === 0 && !state.filters.search;
+        holidayCounter.textContent = isDefaultState ? '' : `Знайдено свят: ${count}`;
+    }
+
+    function render() {
+        document.querySelectorAll('.pulse-animation').forEach(el => el.classList.remove('pulse-animation'));
+        renderBreadcrumbs();
+
+        if (state.view === 'year') {
+            yearView.classList.remove('hidden');
+            monthView.classList.add('hidden');
+            renderYearView();
+        } else { // month view
+            yearView.classList.add('hidden');
+            monthView.classList.remove('hidden');
+            renderMonthView();
+        }
+    }
+
+    function renderBreadcrumbs() {
+        breadcrumbs.innerHTML = ''; // Clear it first
+        const homeLink = createBreadcrumbLink('Річний огляд', () => {
+            state.view = 'year';
+            state.selectedMonth = null;
+            render();
+        });
+        breadcrumbs.appendChild(homeLink);
+
+        if (state.selectedMonth !== null) {
+            const separator = document.createElement('span');
+            separator.className = 'mx-2 text-cyan-400';
+            separator.textContent = '/';
+            breadcrumbs.appendChild(separator);
+            const monthLink = createBreadcrumbLink(monthNames[state.selectedMonth], () => {});
+            monthLink.style.pointerEvents = 'none'; // Not clickable
+            breadcrumbs.appendChild(monthLink);
+        }
+    }
+
+    function createBreadcrumbLink(text, onClick) {
+        const link = document.createElement('a');
+        link.href = '#';
+        link.textContent = text;
+        link.className = 'hover:text-pink-400 transition neon-text-secondary';
+        link.onclick = (e) => {
+            e.preventDefault();
+            onClick();
+        };
+        return link;
+    }
+
+    // --- View Rendering & Event Handling ---
+
+    function renderYearView() {
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4';
+        
+        grid.innerHTML = monthNames.map((name, index) => {
+            const holidaysInMonth = getHolidaysForMonth(index, state.filteredHolidays).length;
+            const hasHolidays = holidaysInMonth > 0;
+            // IMPROVEMENT: Use <button> for accessibility
+            return `
+                <button data-month="${index}" class="p-4 rounded-lg text-center cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 border border-cyan-500/30 hover:border-pink-500 hover:shadow-[0_0_15px_var(--primary-neon)] ${hasHolidays ? 'bg-cyan-900/40' : 'bg-gray-800/30 opacity-70'}" ${!hasHolidays ? 'disabled' : ''}>
+                    <div class="font-orbitron text-xl md:text-2xl font-bold">${name}</div>
+                    <div class="text-sm text-gray-300 mt-2">${hasHolidays ? `${holidaysInMonth} свят` : 'Немає свят'}</div>
+                </button>
+            `;
+        }).join('');
+        yearView.innerHTML = '';
+        yearView.appendChild(grid);
+    }
+
+    function handleYearViewClick(e) {
+        const monthButton = e.target.closest('button[data-month]');
+        if (monthButton) {
+            state.view = 'month';
+            state.selectedMonth = parseInt(monthButton.dataset.month, 10);
+            render();
+        }
+    }
+
+    function renderMonthView() {
+        const month = state.selectedMonth;
+        const year = 2025;
+        const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0=Sun, 1=Mon...
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+        let html = `<h2 class="text-3xl font-orbitron text-center mb-6 neon-text-primary">${monthNames[month]} 2025</h2>`;
+        html += `<div class="grid grid-cols-7 gap-1 text-center">`;
+        dayNames.forEach(day => { html += `<div class="font-bold text-cyan-400 p-2">${day}</div>`; });
+
+        // BUG FIX: Corrected blank day calculation for Monday-first week
+        const blanks = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
+        for (let i = 0; i < blanks; i++) { html += `<div></div>`; }
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const holidaysOnDay = getHolidaysForDate(dateString, state.filteredHolidays);
+            const hasHolidays = holidaysOnDay.length > 0;
+            
+            const cellClasses = 'p-2 h-24 md:h-32 rounded-md flex flex-col items-center justify-start transition duration-200 border border-transparent';
+            const dayId = `day-${dateString}`;
+            const tag = hasHolidays ? 'button' : 'div';
+            
+            const tooltipHtml = hasHolidays ? `<span class="tooltiptext">${holidaysOnDay.slice(0, 3).map(h => `• ${h.name}`).join('<br>') + (holidaysOnDay.length > 3 ? '<br>...та інші' : '')}</span>` : '';
+            const indicatorsHtml = hasHolidays ? `<div class="w-full mt-1 flex-grow overflow-hidden">${holidaysOnDay.map(h => `<div class="h-1.5 w-full rounded-full ${getHolidayTypeColor(h.type)} mb-1"></div>`).slice(0,4).join('')}</div>` : '';
+
+            html += `
+                <${tag} id="${dayId}" data-date="${dateString}" class="${cellClasses} ${hasHolidays ? 'bg-cyan-900/50 border-cyan-700/50 cursor-pointer hover:bg-pink-900/60 hover:border-pink-500 tooltip' : 'bg-gray-800/30 opacity-60'}">
+                    <span class="font-bold">${day}</span>
+                    ${indicatorsHtml}
+                    ${tooltipHtml}
+                </${tag}>
+            `;
+        }
+        
+        html += `</div>`;
+        monthView.innerHTML = html;
+    }
+
+    function handleMonthViewClick(e) {
+        const dayButton = e.target.closest('button[data-date]');
+        if (dayButton) {
+            showDayModal(dayButton.dataset.date);
+        }
+    }
+
+    // --- Modal Logic ---
+    function showDayModal(dateString) {
+        const date = new Date(dateString);
+        // Show all holidays for the day, not just filtered ones, for context
+        const holidaysOnDay = getHolidaysForDate(dateString, holidays); 
+        
+        let contentHtml = `
+            <button id="modal-close-btn" class="absolute top-2 right-3 text-3xl text-gray-400 hover:text-white transition">&times;</button>
+            <h2 class="text-3xl font-orbitron text-center mb-6 neon-text-primary">${date.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' })}</h2>
+        `;
+        
+        if (holidaysOnDay.length > 0) {
+            contentHtml += `<div class="space-y-4">`;
+            holidaysOnDay.forEach(h => {
+                const countriesList = h.countries.map(c => countryMap[c] ? `${countryMap[c].flag} ${countryMap[c].name}` : c).join(', ');
+                contentHtml += `
+                    <div class="glass-panel p-4 rounded-lg border-l-4 ${getHolidayTypeBorder(h.type)}">
+                        <h3 class="text-xl font-bold text-pink-400">${h.name}</h3>
+                        <p class="text-sm text-cyan-300 my-1">Тип: ${h.type}</p>
+                        <p class="text-sm text-gray-300">Країни: ${countriesList}</p>
+                    </div>
+                `;
+            });
+            contentHtml += `</div>`;
+        } else {
+            contentHtml += `<p class="text-center text-gray-400">На цю дату немає свят.</p>`;
+        }
+        
+        modalContentArea.innerHTML = contentHtml;
+        dayModal.classList.add('visible');
+        // Add close event to the new button
+        document.getElementById('modal-close-btn').addEventListener('click', hideDayModal);
+    }
+    
+    function hideDayModal() {
+        dayModal.classList.remove('visible');
+    }
+
+    // --- UTILITY & IMPROVEMENT FUNCTIONS ---
+    
+    function navigateToFirstSearchResult() {
+        if (state.filteredHolidays.length === 0) return;
+
+        const firstResult = state.filteredHolidays.sort((a,b) => new Date(a.startDate) - new Date(b.startDate))[0];
+        const date = new Date(firstResult.startDate);
+        const monthIndex = date.getMonth();
+
+        state.view = 'month';
+        state.selectedMonth = monthIndex;
+        render(); // Re-render to show the month view
+
+        // Defer highlighting until after the DOM is updated
+        setTimeout(() => {
+            const dayElement = document.getElementById(`day-${firstResult.startDate}`);
+            if (dayElement) {
+                dayElement.classList.add('pulse-animation');
+                dayElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100); // A small delay is enough
+    }
+    
+    function getHolidayTypeColor(type) {
+        return { 'Національні': 'bg-pink-500', 'Релігійні': 'bg-yellow-400', 'Агрономічні': 'bg-green-500' }[type] || 'bg-gray-400';
+    }
+    
+    function getHolidayTypeBorder(type) {
+        return { 'Національні': 'border-pink-500', 'Релігійні': 'border-yellow-400', 'Агрономічні': 'border-green-500' }[type] || 'border-gray-400';
+    }
+
+    // BUG FIX: Replaced complex date comparison with robust string comparison
+    function getHolidaysForDate(dateString, holidayList) {
+        // dateString is in 'YYYY-MM-DD' format.
+        // h.startDate and h.endDate are also in 'YYYY-MM-DD' format.
+        // Simple string comparison is robust and avoids all timezone issues.
+        return holidayList.filter(h => {
+            return dateString >= h.startDate && dateString <= h.endDate;
+        });
+    }
+
+    function getHolidaysForMonth(monthIndex, holidayList) {
+        return holidayList.filter(h => {
+            const startMonth = new Date(h.startDate).getMonth();
+            const endMonth = new Date(h.endDate).getMonth();
+            const startYear = new Date(h.startDate).getFullYear();
+            const endYear = new Date(h.endDate).getFullYear();
+            // Handle multi-year events if any, though not present in current data
+            return (startYear < 2025 && endYear > 2025) || 
+                   (startYear === 2025 && endYear > 2025 && monthIndex >= startMonth) ||
+                   (startYear < 2025 && endYear === 2025 && monthIndex <= endMonth) ||
+                   (startYear === 2025 && endYear === 2025 && monthIndex >= startMonth && monthIndex <= endMonth);
+        });
+    }
+
+    // --- START ---
+    init();
+});
+</script>
+
 </body>
 </html>
+�
