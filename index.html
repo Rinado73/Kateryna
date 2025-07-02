@@ -126,11 +126,7 @@
         /* Стилі для перемикання вкладок */
         .view { display: none; }
         .view.active { display: block; }
-        .month-view-grid { display: none; }
-        .month-view-grid.active { display: grid; }
-        .day-view-panel { display: none; }
-        .day-view-panel.active { display: block; }
-
+        
         /* Хлібні крихти */
         .breadcrumb-link {
             cursor: pointer;
@@ -156,7 +152,7 @@
         </div>
 
         <!-- Панель фільтрів -->
-        <div id="filters" class="mb-8 p-4 grid-cols-1 md:grid-cols-3 gap-4 items-center panel hidden" data-selected-country="all">
+        <div id="filters" class="mb-8 p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center panel" data-selected-country="all">
             <!-- Фільтр за країною -->
             <div class="relative">
                 <label class="block text-sm font-medium mb-1">Країна:</label>
@@ -409,11 +405,11 @@
                 document.getElementById(`${newView}-view`).classList.add('active');
 
                 if (newView === 'day') {
-                    filtersPanel.style.display = 'none';
-                    holidayCounter.parentElement.style.display = 'none';
+                    filtersPanel.classList.add('hidden');
+                    holidayCounter.parentElement.classList.add('hidden');
                 } else {
-                    filtersPanel.style.display = 'grid';
-                    holidayCounter.parentElement.style.display = 'block';
+                    filtersPanel.classList.remove('hidden');
+                    holidayCounter.parentElement.classList.remove('hidden');
                 }
 
                 renderContent();
@@ -648,6 +644,8 @@
                         return countryMatch && typeMatch && searchMatch;
                     });
 
+                    dayCell.dataset.tooltipContent = ''; // ВИПРАВЛЕННЯ: Очищуємо підказку перед оновленням
+
                     if (filteredHolidays.length > 0) {
                         visibleHolidaysCount += filteredHolidays.length;
                         dayCell.dataset.tooltipContent = filteredHolidays.map((h, index) => `
@@ -675,7 +673,6 @@
                         dayCell.appendChild(markersDiv);
                     } else {
                         dayCell.style.opacity = '0.5';
-                        dayCell.dataset.tooltipContent = '';
                     }
                 });
                 
@@ -755,3 +752,4 @@
     </script>
 </body>
 </html>
+
