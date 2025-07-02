@@ -3,139 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Покращений Візуальний Календар 2025</title>
+    <title>Календар 2025 - Glassmorphism</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Стилі для основного контейнера та шрифтів */
+        /* --- Стиль Glassmorphism --- */
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #f0f2f5;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            overflow-x: hidden;
         }
-        /* Градієнти для кожного місяця */
-        .gradient-jan { background-image: linear-gradient(to top right, #a1c4fd, #c2e9fb); }
-        .gradient-feb { background-image: linear-gradient(to top right, #fbc2eb, #a6c1ee); }
-        .gradient-mar { background-image: linear-gradient(to top right, #84fab0, #8fd3f4); }
-        .gradient-apr { background-image: linear-gradient(to top right, #fccb90, #d57eeb); }
-        .gradient-may { background-image: linear-gradient(to top right, #a8e063, #56ab2f); }
-        .gradient-jun { background-image: linear-gradient(to top right, #ffecd2, #fcb69f); }
-        .gradient-jul { background-image: linear-gradient(to top right, #ff9a9e, #fecfef); }
-        .gradient-aug { background-image: linear-gradient(to top right, #fddb92, #d1fdff); }
-        .gradient-sep { background-image: linear-gradient(to top right, #ffc3a0, #ffafbd); }
+
+        /* Динамічний фон */
+        .background-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.5;
+        }
+
+        .shape1 {
+            width: 400px;
+            height: 400px;
+            background: #e94560;
+            top: -10%;
+            left: -10%;
+            animation: move 25s infinite alternate;
+        }
+
+        .shape2 {
+            width: 500px;
+            height: 500px;
+            background: #0f3460;
+            bottom: -15%;
+            right: -15%;
+            animation: move 30s infinite alternate-reverse;
+        }
+        
+        .shape3 {
+            width: 350px;
+            height: 350px;
+            background: #533483;
+            bottom: 20%;
+            left: 15%;
+            animation: move 28s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(0, 0) rotate(0deg); }
+            to { transform: translate(200px, 100px) rotate(360deg); }
+        }
+
+        /* Клас для ефекту скла */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        /* Заголовки */
+        h1 { color: #ffffff; }
+        p { color: #c0c0c0; }
+
+        /* Градієнти для місяців (зробимо їх яскравішими) */
+        .gradient-jan { background-image: linear-gradient(to top right, #2980b9, #6dd5fa); }
+        .gradient-feb { background-image: linear-gradient(to top right, #c94b4b, #4b134f); }
+        .gradient-mar { background-image: linear-gradient(to top right, #11998e, #38ef7d); }
+        .gradient-apr { background-image: linear-gradient(to top right, #ff8008, #ffc837); }
+        .gradient-may { background-image: linear-gradient(to top right, #56ab2f, #a8e063); }
+        .gradient-jun { background-image: linear-gradient(to top right, #f857a6, #ff5858); }
+        .gradient-jul { background-image: linear-gradient(to top right, #e52d27, #b31217); }
+        .gradient-aug { background-image: linear-gradient(to top right, #ff512f, #f09819); }
+        .gradient-sep { background-image: linear-gradient(to top right, #8e2de2, #4a00e0); }
         .gradient-oct { background-image: linear-gradient(to top right, #f4d03f, #16a085); }
         .gradient-nov { background-image: linear-gradient(to top right, #d4fc79, #96e6a1); }
-        .gradient-dec { background-image: linear-gradient(to top right, #e0c3fc, #8ec5fc); }
+        .gradient-dec { background-image: linear-gradient(to top right, #1c92d2, #f2fcfe); }
 
-        /* Стилі для спливаючої підказки */
-        #tooltip {
-            position: fixed; /* Changed to fixed for better positioning */
-            display: none;
-            padding: 12px;
-            background-color: rgba(0, 0, 0, 0.85);
-            color: white;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            z-index: 100;
-            max-width: 300px;
-            pointer-events: none;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: opacity 0.2s ease-in-out;
-        }
         /* Стилі для клітинок календаря */
         .calendar-day {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, background-color 0.2s;
+            border-radius: 10px;
         }
         .calendar-day:hover:not(.empty) {
             transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background-color: rgba(255, 255, 255, 0.15);
             z-index: 10;
         }
-        /* Стилі для вихідних та поточного дня */
-        .weekend {
-             background-color: #f3f4f6 !important; /* Slightly darker gray for weekends */
-        }
-        .today {
-            position: relative;
-        }
-        .today span:first-child {
-             background-color: #3b82f6; /* Blue circle for today */
+        .weekend { background-color: rgba(0,0,0,0.1); }
+        .today > span:first-child {
+             background-color: #e94560;
              color: white;
              border-radius: 50%;
-             width: 2rem;
-             height: 2rem;
+             width: 2.25rem;
+             height: 2.25rem;
              display: inline-flex;
              align-items: center;
              justify-content: center;
+             font-weight: bold;
+             box-shadow: 0 0 0 2px rgba(26,26,46,0.5), 0 0 0 4px #e94560;
         }
-
-        /* Анімація появи елементів */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        /* Стилі для фільтрів */
+        .form-checkbox, .form-input, #country-filter-button {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: #e0e0e0 !important;
         }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out forwards;
+        .form-checkbox:checked {
+            background-color: #e94560 !important;
         }
-        .month-grid {
-            animation: fadeIn 0.5s ease-in-out forwards;
-            opacity: 0;
+        ::placeholder { color: #a0a0a0 !important; }
+        
+        /* Спливаючі елементи */
+        #tooltip, #country-filter-dropdown {
+            background: rgba(30, 30, 50, 0.7);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
         }
-        /* Delay for each month */
-        .month-grid:nth-child(1) { animation-delay: 0.1s; }
-        .month-grid:nth-child(2) { animation-delay: 0.2s; }
-        .month-grid:nth-child(3) { animation-delay: 0.3s; }
-        .month-grid:nth-child(4) { animation-delay: 0.4s; }
-        .month-grid:nth-child(5) { animation-delay: 0.5s; }
-        .month-grid:nth-child(6) { animation-delay: 0.6s; }
-        .month-grid:nth-child(7) { animation-delay: 0.7s; }
-        .month-grid:nth-child(8) { animation-delay: 0.8s; }
-        .month-grid:nth-child(9) { animation-delay: 0.9s; }
-        .month-grid:nth-child(10) { animation-delay: 1.0s; }
-        .month-grid:nth-child(11) { animation-delay: 1.1s; }
-        .month-grid:nth-child(12) { animation-delay: 1.2s; }
+        #country-list li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .flag-icon { border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
-<body class="bg-gray-100 p-4 sm:p-6 md:p-8">
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="background-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+    </div>
 
     <div class="max-w-7xl mx-auto">
-        <header class="text-center mb-6 md:mb-8 fade-in">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Глобальний Календар 2025</h1>
-            <p class="text-gray-600 mt-2 text-lg">Інтерактивний огляд свят та подій у світі</p>
+        <header class="text-center mb-6 md:mb-12 fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold">Глобальний Календар 2025</h1>
+            <p class="mt-2 text-lg">Інтерактивний огляд свят та подій у світі</p>
         </header>
 
         <!-- Панель фільтрів -->
-        <div id="filters" class="mb-8 p-4 bg-white rounded-xl shadow-md grid grid-cols-1 md:grid-cols-3 gap-4 items-center fade-in">
-            <!-- Фільтр за країною -->
-            <div>
-                <label for="country-filter" class="block text-sm font-medium text-gray-700 mb-1">Країна:</label>
-                <select id="country-filter" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="all">Всі країни</option>
-                    <!-- Опції країн додаються динамічно -->
-                </select>
+        <div id="filters" class="mb-8 p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center fade-in glass-effect" data-selected-country="all">
+            <!-- Вдосконалений Фільтр за країною -->
+            <div class="relative">
+                <label class="block text-sm font-medium mb-1">Країна:</label>
+                <button id="country-filter-button" class="w-full flex items-center justify-between text-left p-2 rounded-md shadow-sm">
+                    <span class="flex items-center">
+                        <img id="selected-country-flag" src="https://flagcdn.com/w20/ua.png" class="flag-icon mr-2 hidden" alt="flag">
+                        <span id="selected-country-name">Всі країни</span>
+                    </span>
+                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                </button>
+                <div id="country-filter-dropdown" class="absolute hidden mt-1 w-full z-20 p-2 origin-top" >
+                    <input type="text" id="country-search-input" placeholder="Пошук країни..." class="w-full p-2 mb-2 rounded-md form-input">
+                    <ul id="country-list" class="max-h-60 overflow-y-auto">
+                        <!-- Опції країн додаються динамічно -->
+                    </ul>
+                </div>
             </div>
             <!-- Фільтр за типом свята -->
             <div class="flex flex-wrap gap-x-4 gap-y-2 items-center justify-center">
-                 <label class="block text-sm font-medium text-gray-700 md:hidden">Тип свята:</label>
-                 <label class="inline-flex items-center">
-                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-red-600" value="red" checked>
-                    <span class="ml-2 text-gray-700">Національні</span>
+                 <label class="block text-sm font-medium md:hidden">Тип свята:</label>
+                 <label class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-red-500 border-gray-500 rounded focus:ring-red-400" value="red" checked>
+                    <span class="ml-2">Національні</span>
                 </label>
-                <label class="inline-flex items-center">
-                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-purple-600" value="purple" checked>
-                    <span class="ml-2 text-gray-700">Релігійні</span>
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-purple-500 border-gray-500 rounded focus:ring-purple-400" value="purple" checked>
+                    <span class="ml-2">Релігійні</span>
                 </label>
-                <label class="inline-flex items-center">
-                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-green-600" value="green" checked>
-                    <span class="ml-2 text-gray-700">Агрономічні</span>
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="type-filter form-checkbox h-5 w-5 text-green-500 border-gray-500 rounded focus:ring-green-400" value="green" checked>
+                    <span class="ml-2">Агрономічні</span>
                 </label>
             </div>
              <!-- Пошук -->
             <div>
-                <label for="search-filter" class="block text-sm font-medium text-gray-700 mb-1">Пошук за назвою:</label>
-                <input type="text" id="search-filter" placeholder="Наприклад, День незалежності" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <label class="block text-sm font-medium mb-1">Пошук за назвою:</label>
+                <input type="text" id="search-filter" placeholder="Наприклад, День незалежності" class="w-full p-2 rounded-md shadow-sm form-input">
             </div>
         </div>
 
@@ -313,14 +373,23 @@
             const year = 2025;
             
             // Елементи DOM
+            const filters = document.getElementById('filters');
             const calendarContainer = document.getElementById('calendar-container');
             const tooltip = document.getElementById('tooltip');
-            const countryFilter = document.getElementById('country-filter');
+            const countryFilterButton = document.getElementById('country-filter-button');
+            const countryFilterDropdown = document.getElementById('country-filter-dropdown');
+            const countrySearchInput = document.getElementById('country-search-input');
+            const countryList = document.getElementById('country-list');
+            const selectedCountryName = document.getElementById('selected-country-name');
+            const selectedCountryFlag = document.getElementById('selected-country-flag');
             const typeFilters = document.querySelectorAll('.type-filter');
             const searchFilter = document.getElementById('search-filter');
 
             const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             let activeTooltipDay = null;
+            
+            // Коди країн для прапорів
+            const countryCodes = {"Афганістан":"af","Албанія":"al","Алжир":"dz","Ангола":"ao","Вірменія":"am","Австралія":"au","Австрія":"at","Багами":"bs","Бахрейн":"bh","Бангладеш":"bd","Бельгія":"be","Беліз":"bz","Бенін":"bj","Бутан":"bt","Болівія":"bo","Боснія і Герцеговина":"ba","Ботсвана":"bw","Бразилія":"br","Бруней":"bn","Болгарія":"bg","Камбоджа":"kh","Камерун":"cm","Канада":"ca","Кабо-Верде":"cv","Чад":"td","Чилі":"cl","Китай":"cn","Колумбія":"co","Коста-Рика":"cr","Кот-д'Івуар":"ci","Хорватія":"hr","Кіпр":"cy","Чехія":"cz","Данія":"dk","Джибуті":"dj","Еквадор":"ec","Єгипет":"eg","Сальвадор":"sv","Екваторіальна Гвінея":"gq","Еритрея":"er","Естонія":"ee","Ефіопія":"et","Фіджі":"fj","Фінляндія":"fi","Франція":"fr","Гамбія":"gm","Грузія":"ge","Німеччина":"de","Гана":"gh","Греція":"gr","Гватемала":"gt","Гвінея":"gn","Гвінея-Бісау":"gw","Гондурас":"hn","Ісландія":"is","Індія":"in","Індонезія":"id","Ірландія":"ie","Ізраїль":"il","Італія":"it","Ямайка":"jm","Японія":"jp","Казахстан":"kz","Кенія":"ke","Косово":"xk","Кувейт":"kw","Киргизстан":"kg","Лаос":"la","Латвія":"lv","Ліван":"lb","Лесото":"ls","Ліберія":"lr","Литва":"lt","Люксембург":"lu","Мадагаскар":"mg","Малайзія":"my","Мальдіви":"mv","Малі":"ml","Мальта":"mt","Мавританія":"mr","Маврикій":"mu","Мексика":"mx","Молдова":"md","Марокко":"ma","Мозамбік":"mz","М'янма":"mm","Непал":"np","Нідерланди":"nl","Нова Зеландія":"nz","Нікарагуа":"ni","Нігер":"ne","Нігерія":"ng","Північна Македонія":"mk","Норвегія":"no","Пакистан":"pk","Панама":"pa","Папуа-Нова Гвінея":"pg","Перу":"pe","Філіппіни":"ph","Польща":"pl","Португалія":"pt","Катар":"qa","Румунія":"ro","Руанда":"rw","Сан-Томе і Принсіпі":"st","Саудівська Аравія":"sa","Сенегал":"sn","Сербія":"rs","Сьєрра-Леоне":"sl","Сінгапур":"sg","Словенія":"si","ПАР":"za","Південна Корея":"kr","Південний Судан":"ss","Іспанія":"es","Шрі-Ланка":"lk","Судан":"sd","Суринам":"sr","Швеція":"se","Швейцарія":"ch","Сирія":"sy","Тайвань":"tw","Таджикистан":"tj","Танзанія":"tz","Таїланд":"th","Того":"tg","Тринідад і Тобаго":"tt","Туніс":"tn","Туреччина":"tr","Туркменістан":"tm","Уганда":"ug","Україна":"ua","ОАЕ":"ae","Велика Британія":"gb","Уругвай":"uy","Узбекистан":"uz","В'єтнам":"vn","Ємен":"ye","Замбія":"zm","Зімбабве":"zw"};
 
             // Функція для генерації календаря
             function generateCalendar() {
@@ -329,18 +398,20 @@
 
                 monthNames.forEach((monthName, monthIndex) => {
                     const monthDiv = document.createElement('div');
-                    monthDiv.className = `month-grid bg-white rounded-xl shadow-lg overflow-hidden flex flex-col`;
+                    monthDiv.className = `month-grid glass-effect p-4`;
                     
                     const header = document.createElement('div');
-                    header.className = `p-4 text-white font-bold text-xl text-center gradient-${gradientClasses[monthIndex]}`;
+                    header.className = `p-3 -m-4 mb-4 text-white font-bold text-xl text-center gradient-${gradientClasses[monthIndex]}`;
+                    header.style.borderTopLeftRadius = '20px';
+                    header.style.borderTopRightRadius = '20px';
                     header.textContent = `${monthName} ${year}`;
                     monthDiv.appendChild(header);
 
                     const grid = document.createElement('div');
-                    grid.className = 'grid grid-cols-7 gap-1 p-2 flex-grow';
+                    grid.className = 'grid grid-cols-7 gap-1 flex-grow';
                     
                     dayNames.forEach(day => {
-                        grid.appendChild(Object.assign(document.createElement('div'), { className: 'text-center font-semibold text-gray-600 text-sm py-1', textContent: day }));
+                        grid.appendChild(Object.assign(document.createElement('div'), { className: 'text-center font-semibold text-sm py-1', textContent: day }));
                     });
 
                     const firstDayOfMonth = new Date(year, monthIndex, 1);
@@ -355,7 +426,7 @@
                         const dayCell = document.createElement('div');
                         const date = new Date(year, monthIndex, day);
                         const dayOfWeek = date.getDay();
-                        dayCell.className = 'calendar-day relative flex items-center justify-center h-10 sm:h-12 bg-gray-50 rounded-lg cursor-pointer';
+                        dayCell.className = 'calendar-day relative flex items-center justify-center h-10 sm:h-12 cursor-pointer';
                         
                         if (dayOfWeek === 6 || dayOfWeek === 0) {
                             dayCell.classList.add('weekend');
@@ -403,20 +474,62 @@
                 });
                 
                 const sortedCountries = Array.from(countries).sort((a, b) => a.localeCompare(b, 'uk'));
+                
+                // Додаємо опцію "Всі країни"
+                const allCountriesLi = document.createElement('li');
+                allCountriesLi.className = 'p-2 hover:bg-gray-100/20 rounded-md cursor-pointer flex items-center';
+                allCountriesLi.textContent = 'Всі країни';
+                allCountriesLi.dataset.country = 'all';
+                allCountriesLi.addEventListener('click', () => selectCountry('all', 'Всі країни'));
+                countryList.appendChild(allCountriesLi);
+
                 sortedCountries.forEach(country => {
                     if (country && !country.includes("країни") && !country.includes("світ") && !country.includes("півкуля") && !country.includes("Азія") ) {
-                         countryFilter.appendChild(Object.assign(document.createElement('option'), { value: country, textContent: country }));
+                         const li = document.createElement('li');
+                         li.className = 'p-2 hover:bg-gray-100/20 rounded-md cursor-pointer flex items-center';
+                         li.dataset.country = country;
+
+                         const code = countryCodes[country]?.toLowerCase();
+                         if (code) {
+                             const flagImg = document.createElement('img');
+                             flagImg.src = `https://flagcdn.com/w20/${code}.png`;
+                             flagImg.className = 'flag-icon mr-2';
+                             flagImg.alt = country;
+                             li.appendChild(flagImg);
+                         }
+                         
+                         const nameSpan = document.createElement('span');
+                         nameSpan.textContent = country;
+                         li.appendChild(nameSpan);
+
+                         li.addEventListener('click', () => selectCountry(country, country, code));
+                         countryList.appendChild(li);
                     }
                 });
             }
 
+            function selectCountry(value, name, code) {
+                filters.dataset.selectedCountry = value;
+                selectedCountryName.textContent = name;
+                if (code) {
+                    selectedCountryFlag.src = `https://flagcdn.com/w20/${code}.png`;
+                    selectedCountryFlag.classList.remove('hidden');
+                } else {
+                    selectedCountryFlag.classList.add('hidden');
+                }
+                countryFilterDropdown.classList.add('hidden');
+                updateCalendarView();
+            }
+
             // Функція для оновлення вигляду календаря відповідно до фільтрів
             function updateCalendarView() {
-                const selectedCountry = countryFilter.value;
+                const selectedCountry = filters.dataset.selectedCountry;
                 const selectedTypes = Array.from(typeFilters).filter(cb => cb.checked).map(cb => cb.value);
                 const searchQuery = searchFilter.value.toLowerCase();
 
-                document.querySelectorAll('.calendar-day.has-holiday').forEach(dayCell => {
+                document.querySelectorAll('.calendar-day').forEach(dayCell => {
+                    if (!dayCell.classList.contains('has-holiday')) return;
+
                     const cellHolidays = JSON.parse(dayCell.dataset.holidays);
                     
                     const filteredHolidays = cellHolidays.filter(h => {
@@ -431,7 +544,7 @@
                     dayCell.querySelector('.short-name-label')?.remove();
 
                     if (filteredHolidays.length > 0) {
-                        dayCell.classList.add('font-bold');
+                        dayCell.style.opacity = '1';
                         const markersDiv = document.createElement('div');
                         markersDiv.className = 'holiday-markers absolute bottom-1 left-1/2 -translate-x-1/2 flex space-x-1';
                         
@@ -450,19 +563,19 @@
 
                         if(shortNames.length > 0) {
                             const shortNameLabel = document.createElement('span');
-                            shortNameLabel.className = 'short-name-label absolute top-0.5 text-center text-[8px] text-gray-500 leading-none';
+                            shortNameLabel.className = 'short-name-label absolute top-0.5 text-center text-[8px] opacity-70 leading-none';
                             shortNameLabel.textContent = shortNames.join('/');
                             dayCell.appendChild(shortNameLabel);
                         }
 
                         dayCell.appendChild(markersDiv);
                         dayCell.dataset.tooltipContent = filteredHolidays.map((h, index) => `
-                            <div class="${index > 0 ? 'mt-2 pt-2 border-t border-gray-600' : ''}">
+                            <div class="${index > 0 ? 'mt-2 pt-2 border-t border-white/20' : ''}">
                                 <strong class="block">${h.name}</strong>
                                 <span class="text-xs text-gray-300">${h.countries.join(', ')}</span>
                             </div>`).join('');
                     } else {
-                        dayCell.classList.remove('font-bold');
+                        dayCell.style.opacity = '0.5';
                         dayCell.dataset.tooltipContent = '';
                     }
                 });
@@ -516,13 +629,32 @@
             }
 
             // Додаємо слухачі подій до фільтрів
-            countryFilter.addEventListener('change', updateCalendarView);
             typeFilters.forEach(cb => cb.addEventListener('change', updateCalendarView));
             searchFilter.addEventListener('input', updateCalendarView);
             
-            // Закриття підказки при кліку поза нею (для мобільних)
+            // Логіка для пошукового фільтра країн
+            countryFilterButton.addEventListener('click', () => {
+                countryFilterDropdown.classList.toggle('hidden');
+            });
+
+            countrySearchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                countryList.querySelectorAll('li').forEach(li => {
+                    const countryName = li.textContent.toLowerCase();
+                    if (countryName.includes(searchTerm)) {
+                        li.style.display = 'flex';
+                    } else {
+                        li.style.display = 'none';
+                    }
+                });
+            });
+
+            // Закриття фільтра при кліку поза ним
             document.addEventListener('click', (e) => {
-                if (isTouchDevice && activeTooltipDay && !activeTooltipDay.contains(e.target)) {
+                if (!countryFilterButton.contains(e.target) && !countryFilterDropdown.contains(e.target)) {
+                    countryFilterDropdown.classList.add('hidden');
+                }
+                 if (isTouchDevice && activeTooltipDay && !activeTooltipDay.contains(e.target)) {
                     tooltip.style.display = 'none';
                     activeTooltipDay = null;
                 }
