@@ -52,6 +52,13 @@
             border-bottom: 1px solid #E5E7EB;
             color: #111827;
         }
+        .month-header-clickable {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .month-header-clickable:hover {
+            background-color: #F3F4F6;
+        }
 
         /* Стилі для клітинок календаря */
         .calendar-day {
@@ -115,22 +122,41 @@
             background-color: #EFF6FF;
         }
         .flag-icon { border: 1px solid #E5E7EB; }
+
+        /* Стилі для перемикання вкладок */
+        .view { display: none; }
+        .view.active { display: block; }
+        .month-view-grid { display: none; }
+        .month-view-grid.active { display: grid; }
+        .day-view-panel { display: none; }
+        .day-view-panel.active { display: block; }
+
+        /* Хлібні крихти */
+        .breadcrumb-link {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .breadcrumb-link:hover {
+            color: #3B82F6;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-6 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <header class="text-center mb-6 md:mb-12">
+        <header class="text-center mb-4">
             <h1 class="text-4xl md:text-5xl font-bold">Глобальний Календар 2025</h1>
             <p class="mt-2 text-lg">Інтерактивний огляд свят та подій у світі</p>
         </header>
+
+        <nav id="breadcrumbs" class="text-center text-gray-500 mb-4 font-medium"></nav>
         
-        <div class="text-center mb-4 font-semibold text-gray-600" id="holiday-counter-container">
+        <div id="holiday-counter-container" class="text-center mb-4 font-semibold text-gray-600">
             <span id="holiday-counter"></span>
         </div>
 
         <!-- Панель фільтрів -->
-        <div id="filters" class="mb-8 p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center panel" data-selected-country="all">
+        <div id="filters" class="mb-8 p-4 grid-cols-1 md:grid-cols-3 gap-4 items-center panel hidden" data-selected-country="all">
             <!-- Фільтр за країною -->
             <div class="relative">
                 <label class="block text-sm font-medium mb-1">Країна:</label>
@@ -175,10 +201,11 @@
                 </button>
             </div>
         </div>
-
-        <div id="calendar-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-            <!-- Сюди буде динамічно додано календарі місяців -->
-        </div>
+        
+        <!-- Контейнери для різних рівнів перегляду -->
+        <div id="year-view" class="view grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"></div>
+        <div id="month-view" class="view"></div>
+        <div id="day-view" class="view"></div>
     </div>
 
     <div id="tooltip"></div>
@@ -349,8 +376,11 @@
             const year = 2025;
             
             // Елементи DOM
-            const filters = document.getElementById('filters');
-            const calendarContainer = document.getElementById('calendar-container');
+            const yearView = document.getElementById('year-view');
+            const monthView = document.getElementById('month-view');
+            const dayView = document.getElementById('day-view');
+            const breadcrumbs = document.getElementById('breadcrumbs');
+            const filtersPanel = document.getElementById('filters');
             const tooltip = document.getElementById('tooltip');
             const holidayCounter = document.getElementById('holiday-counter');
             const countryFilterButton = document.getElementById('country-filter-button');
@@ -365,144 +395,237 @@
 
             const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             let activeTooltipDay = null;
+            let state = { view: 'year', month: null, day: null };
             
             // Коди країн для прапорів
             const countryCodes = {"Афганістан":"af","Албанія":"al","Алжир":"dz","Ангола":"ao","Вірменія":"am","Австралія":"au","Австрія":"at","Багами":"bs","Бахрейн":"bh","Бангладеш":"bd","Бельгія":"be","Беліз":"bz","Бенін":"bj","Бутан":"bt","Болівія":"bo","Боснія і Герцеговина":"ba","Ботсвана":"bw","Бразилія":"br","Бруней":"bn","Болгарія":"bg","Камбоджа":"kh","Камерун":"cm","Канада":"ca","Кабо-Верде":"cv","Чад":"td","Чилі":"cl","Китай":"cn","Колумбія":"co","Коста-Рика":"cr","Кот-д'Івуар":"ci","Хорватія":"hr","Кіпр":"cy","Чехія":"cz","Данія":"dk","Джибуті":"dj","Еквадор":"ec","Єгипет":"eg","Сальвадор":"sv","Екваторіальна Гвінея":"gq","Еритрея":"er","Естонія":"ee","Ефіопія":"et","Фіджі":"fj","Фінляндія":"fi","Франція":"fr","Гамбія":"gm","Грузія":"ge","Німеччина":"de","Гана":"gh","Греція":"gr","Гватемала":"gt","Гвінея":"gn","Гвінея-Бісау":"gw","Гондурас":"hn","Ісландія":"is","Індія":"in","Індонезія":"id","Ірландія":"ie","Ізраїль":"il","Італія":"it","Ямайка":"jm","Японія":"jp","Казахстан":"kz","Кенія":"ke","Косово":"xk","Кувейт":"kw","Киргизстан":"kg","Лаос":"la","Латвія":"lv","Ліван":"lb","Лесото":"ls","Ліберія":"lr","Литва":"lt","Люксембург":"lu","Мадагаскар":"mg","Малайзія":"my","Мальдіви":"mv","Малі":"ml","Мальта":"mt","Мавританія":"mr","Маврикій":"mu","Мексика":"mx","Молдова":"md","Марокко":"ma","Мозамбік":"mz","М'янма":"mm","Непал":"np","Нідерланди":"nl","Нова Зеландія":"nz","Нікарагуа":"ni","Нігер":"ne","Нігерія":"ng","Північна Македонія":"mk","Норвегія":"no","Пакистан":"pk","Панама":"pa","Папуа-Нова Гвінея":"pg","Перу":"pe","Філіппіни":"ph","Польща":"pl","Португалія":"pt","Катар":"qa","Румунія":"ro","Руанда":"rw","Сан-Томе і Принсіпі":"st","Саудівська Аравія":"sa","Сенегал":"sn","Сербія":"rs","Сьєрра-Леоне":"sl","Сінгапур":"sg","Словенія":"si","ПАР":"za","Південна Корея":"kr","Південний Судан":"ss","Іспанія":"es","Шрі-Ланка":"lk","Судан":"sd","Суринам":"sr","Швеція":"se","Швейцарія":"ch","Сирія":"sy","Тайвань":"tw","Таджикистан":"tj","Танзанія":"tz","Таїланд":"th","Того":"tg","Тринідад і Тобаго":"tt","Туніс":"tn","Туреччина":"tr","Туркменістан":"tm","Уганда":"ug","Україна":"ua","ОАЕ":"ae","Велика Британія":"gb","Уругвай":"uy","Узбекистан":"uz","В'єтнам":"vn","Ємен":"ye","Замбія":"zm","Зімбабве":"zw"};
 
-            // Функція для генерації календаря
-            function generateCalendar() {
+            function switchView(newView, options = {}) {
+                state.view = newView;
+                state.month = options.monthIndex ?? state.month;
+                state.day = options.dateStr ?? state.day;
+
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                document.getElementById(`${newView}-view`).classList.add('active');
+
+                if (newView === 'day') {
+                    filtersPanel.style.display = 'none';
+                    holidayCounter.parentElement.style.display = 'none';
+                } else {
+                    filtersPanel.style.display = 'grid';
+                    holidayCounter.parentElement.style.display = 'block';
+                }
+
+                renderContent();
+                renderBreadcrumbs();
+            }
+
+            function renderContent() {
+                if (state.view === 'year') {
+                    renderYearView();
+                } else if (state.view === 'month') {
+                    renderMonthView(state.month);
+                } else if (state.view === 'day') {
+                    renderDayView(state.day);
+                }
+            }
+
+            function renderBreadcrumbs() {
+                breadcrumbs.innerHTML = '';
+                const yearLink = document.createElement('span');
+                yearLink.textContent = 'Річний огляд';
+                yearLink.className = 'breadcrumb-link';
+                yearLink.onclick = () => switchView('year');
+                breadcrumbs.appendChild(yearLink);
+
+                if (state.view === 'month' || state.view === 'day') {
+                    breadcrumbs.innerHTML += ' / ';
+                    const monthLink = document.createElement('span');
+                    monthLink.textContent = monthNames[state.month];
+                    monthLink.className = 'breadcrumb-link';
+                    monthLink.onclick = () => switchView('month', { monthIndex: state.month });
+                    breadcrumbs.appendChild(monthLink);
+                }
+
+                if (state.view === 'day') {
+                    breadcrumbs.innerHTML += ' / ';
+                    const dayLink = document.createElement('span');
+                    dayLink.textContent = new Date(state.day).getDate();
+                    breadcrumbs.appendChild(dayLink);
+                }
+            }
+
+            function renderYearView() {
+                yearView.innerHTML = '';
                 const today = new Date();
                 const currentMonthIndex = today.getMonth();
                 const currentYear = today.getFullYear();
-                const todayStr = (currentYear === year) ? `${year}-${String(currentMonthIndex + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}` : null;
 
                 monthNames.forEach((monthName, monthIndex) => {
                     const monthDiv = document.createElement('div');
-                    monthDiv.className = `month-grid panel p-4`;
+                    monthDiv.className = `panel p-4`;
                     if(monthIndex === currentMonthIndex && year === currentYear) {
                         monthDiv.classList.add('current-month-glow');
                     }
                     
                     const header = document.createElement('div');
-                    header.className = `month-header p-3 -m-4 mb-4 font-bold text-xl text-center`;
+                    header.className = `month-header month-header-clickable p-3 -m-4 mb-4 font-bold text-xl text-center`;
                     header.style.borderTopLeftRadius = '12px';
                     header.style.borderTopRightRadius = '12px';
-                    header.textContent = `${monthName} ${year}`;
+                    header.textContent = `${monthName}`;
+                    header.onclick = () => switchView('month', { monthIndex });
                     monthDiv.appendChild(header);
 
                     const grid = document.createElement('div');
                     grid.className = 'grid grid-cols-7 gap-1 flex-grow';
                     
                     dayNames.forEach(day => {
-                        grid.appendChild(Object.assign(document.createElement('div'), { className: 'text-center font-semibold text-gray-500 text-sm py-1', textContent: day }));
+                        grid.appendChild(Object.assign(document.createElement('div'), { className: 'text-center font-semibold text-gray-500 text-xs py-1', textContent: day }));
                     });
 
-                    const firstDayOfMonth = new Date(year, monthIndex, 1);
                     const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-                    const startOffset = (firstDayOfMonth.getDay() === 0) ? 6 : firstDayOfMonth.getDay() - 1;
+                    const startOffset = (new Date(year, monthIndex, 1).getDay() === 0) ? 6 : new Date(year, monthIndex, 1).getDay() - 1;
 
                     for (let i = 0; i < startOffset; i++) {
-                        grid.appendChild(Object.assign(document.createElement('div'), {className: 'empty'}));
+                        grid.appendChild(document.createElement('div'));
                     }
 
                     for (let day = 1; day <= daysInMonth; day++) {
                         const dayCell = document.createElement('div');
-                        const date = new Date(year, monthIndex, day);
-                        const dayOfWeek = date.getDay();
-                        dayCell.className = 'calendar-day relative flex items-center justify-center h-10 sm:h-12 cursor-pointer';
-                        
-                        if (dayOfWeek === 6 || dayOfWeek === 0) {
-                            dayCell.classList.add('weekend');
-                        }
-
-                        const dayNumber = Object.assign(document.createElement('span'), { textContent: day, className: 'z-10' });
-                        dayCell.appendChild(dayNumber);
-
+                        dayCell.className = 'calendar-day relative flex items-center justify-center h-8 text-sm';
                         const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                        dayCell.dataset.date = dateStr;
-
-                        if (dateStr === todayStr) {
-                            dayCell.classList.add('today');
-                        }
-                        
+                        dayCell.textContent = day;
                         if (holidays[dateStr]) {
-                            dayCell.classList.add('has-holiday');
-                            dayCell.dataset.holidays = JSON.stringify(holidays[dateStr]);
-                            
-                            if (isTouchDevice) {
-                                dayCell.addEventListener('click', (e) => toggleTooltip(e, dayCell));
-                            } else {
-                                dayCell.addEventListener('mouseenter', (e) => showTooltip(e, dayCell));
-                                dayCell.addEventListener('mouseleave', hideTooltip);
-                                dayCell.addEventListener('mousemove', moveTooltip);
-                            }
+                             dayCell.classList.add('has-holiday', 'font-bold', 'text-blue-600');
                         }
-                        
                         grid.appendChild(dayCell);
                     }
-
                     monthDiv.appendChild(grid);
-                    calendarContainer.appendChild(monthDiv);
+                    yearView.appendChild(monthDiv);
                 });
-                updateCalendarView(); // Initial view update
+                updateFilteredHolidays();
             }
 
-            // Функція для заповнення фільтра країн
-            function populateCountryFilter() {
-                const countries = new Set();
-                Object.values(holidays).forEach(dayHolidays => {
-                    dayHolidays.forEach(holiday => {
-                        holiday.countries.forEach(country => countries.add(country));
-                    });
-                });
+            function renderMonthView(monthIndex) {
+                monthView.innerHTML = '';
+                const monthDiv = document.createElement('div');
+                monthDiv.className = 'panel p-6';
                 
-                const sortedCountries = Array.from(countries).sort((a, b) => a.localeCompare(b, 'uk'));
+                const header = document.createElement('div');
+                header.className = 'month-header p-4 -m-6 mb-6 font-bold text-2xl text-center';
+                header.style.borderTopLeftRadius = '12px';
+                header.style.borderTopRightRadius = '12px';
+                header.textContent = `${monthNames[monthIndex]} ${year}`;
+                monthDiv.appendChild(header);
                 
-                const allCountriesLi = document.createElement('li');
-                allCountriesLi.className = 'p-2 hover:bg-gray-100 rounded-md cursor-pointer flex items-center';
-                allCountriesLi.textContent = 'Всі країни';
-                allCountriesLi.dataset.country = 'all';
-                allCountriesLi.addEventListener('click', () => selectCountry('all', 'Всі країни'));
-                countryList.appendChild(allCountriesLi);
+                const grid = document.createElement('div');
+                grid.className = 'grid grid-cols-7 gap-2';
 
-                sortedCountries.forEach(country => {
-                    if (country && !country.includes("країни") && !country.includes("світ") && !country.includes("півкуля") && !country.includes("Азія") ) {
-                         const li = document.createElement('li');
-                         li.className = 'p-2 hover:bg-gray-100 rounded-md cursor-pointer flex items-center';
-                         li.dataset.country = country;
-                         const code = countryCodes[country]?.toLowerCase();
-                         if (code) {
-                             const flagImg = document.createElement('img');
-                             flagImg.src = `https://flagcdn.com/w20/${code}.png`;
-                             flagImg.className = 'flag-icon mr-2';
-                             flagImg.alt = country;
-                             li.appendChild(flagImg);
-                         }
-                         const nameSpan = document.createElement('span');
-                         nameSpan.textContent = country;
-                         li.appendChild(nameSpan);
-                         li.addEventListener('click', () => selectCountry(country, country, code));
-                         countryList.appendChild(li);
-                    }
+                dayNames.forEach(day => {
+                    grid.appendChild(Object.assign(document.createElement('div'), { className: 'text-center font-bold text-gray-600 pb-2', textContent: day }));
                 });
-            }
 
-            function selectCountry(value, name, code) {
-                filters.dataset.selectedCountry = value;
-                selectedCountryName.textContent = name;
-                if (code) {
-                    selectedCountryFlag.src = `https://flagcdn.com/w20/${code}.png`;
-                    selectedCountryFlag.classList.remove('hidden');
-                } else {
-                    selectedCountryFlag.classList.add('hidden');
+                const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+                const startOffset = (new Date(year, monthIndex, 1).getDay() === 0) ? 6 : new Date(year, monthIndex, 1).getDay() - 1;
+
+                for (let i = 0; i < startOffset; i++) {
+                    grid.appendChild(document.createElement('div'));
                 }
-                countryFilterDropdown.classList.add('hidden');
-                updateCalendarView();
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayCell = createDayCell(day, monthIndex, 'month');
+                    grid.appendChild(dayCell);
+                }
+                monthDiv.appendChild(grid);
+                monthView.appendChild(monthDiv);
+                updateFilteredHolidays();
+            }
+            
+            function renderDayView(dateStr) {
+                dayView.innerHTML = '';
+                const date = new Date(dateStr);
+                const day = date.getDate();
+                const monthIndex = date.getMonth();
+                const weekday = date.toLocaleDateString('uk-UA', { weekday: 'long' });
+
+                const panel = document.createElement('div');
+                panel.className = 'panel p-6 max-w-2xl mx-auto';
+                
+                panel.innerHTML = `
+                    <div class="text-center mb-4">
+                        <h2 class="text-5xl font-bold">${day}</h2>
+                        <p class="text-xl text-gray-500">${monthNames[monthIndex]}, ${weekday}</p>
+                    </div>
+                    <div id="day-holidays-list"></div>
+                `;
+                
+                dayView.appendChild(panel);
+                const list = document.getElementById('day-holidays-list');
+                const dayHolidays = holidays[dateStr] || [];
+
+                if(dayHolidays.length > 0) {
+                    dayHolidays.forEach(h => {
+                        const holidayEl = document.createElement('div');
+                        holidayEl.className = 'p-4 border-t border-gray-200';
+                        
+                        let typeColorClass = '';
+                        if (h.type === 'red') typeColorClass = 'text-red-500';
+                        if (h.type === 'purple') typeColorClass = 'text-purple-500';
+                        if (h.type === 'green') typeColorClass = 'text-green-500';
+
+                        holidayEl.innerHTML = `
+                            <h3 class="text-lg font-semibold ${typeColorClass}">${h.name}</h3>
+                            <p class="text-sm text-gray-500">${h.countries.join(', ')}</p>
+                        `;
+                        list.appendChild(holidayEl);
+                    });
+                } else {
+                    list.innerHTML = `<p class="text-center text-gray-500 py-4">На цей день немає запланованих свят.</p>`;
+                }
             }
 
-            // Функція для оновлення вигляду календаря відповідно до фільтрів
-            function updateCalendarView(isSearch = false) {
-                const selectedCountry = filters.dataset.selectedCountry;
+            function createDayCell(day, monthIndex, viewType) {
+                const dayCell = document.createElement('div');
+                const date = new Date(year, monthIndex, day);
+                const dayOfWeek = date.getDay();
+                dayCell.className = `calendar-day relative flex items-center justify-center h-16 cursor-pointer`;
+                
+                if (dayOfWeek === 6 || dayOfWeek === 0) dayCell.classList.add('weekend');
+
+                const dayNumber = Object.assign(document.createElement('span'), { textContent: day, className: 'z-10' });
+                dayCell.appendChild(dayNumber);
+
+                const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                dayCell.dataset.date = dateStr;
+
+                if (dateStr === new Date().toISOString().slice(0, 10)) dayCell.classList.add('today');
+                
+                if (holidays[dateStr]) {
+                    dayCell.classList.add('has-holiday');
+                    dayCell.dataset.holidays = JSON.stringify(holidays[dateStr]);
+                    
+                    if(viewType === 'month') {
+                        dayCell.onclick = () => switchView('day', { dateStr });
+                        if (isTouchDevice) {
+                            dayCell.addEventListener('touchstart', (e) => {
+                                if (e.touches.length === 1) { // Single touch
+                                    activeTooltipDay = setTimeout(() => showTooltip(e, dayCell), 500); // Long press
+                                }
+                            });
+                            dayCell.addEventListener('touchend', () => clearTimeout(activeTooltipDay));
+                            dayCell.addEventListener('touchmove', () => clearTimeout(activeTooltipDay));
+                        } else {
+                            dayCell.addEventListener('mouseenter', (e) => showTooltip(e, dayCell));
+                            dayCell.addEventListener('mouseleave', hideTooltip);
+                            dayCell.addEventListener('mousemove', moveTooltip);
+                        }
+                    }
+                }
+                return dayCell;
+            }
+
+            function updateFilteredHolidays(isSearch = false) {
+                const selectedCountry = filtersPanel.dataset.selectedCountry;
                 const selectedTypes = Array.from(typeFilters).filter(cb => cb.checked).map(cb => cb.value);
                 const searchQuery = searchFilter.value.toLowerCase();
                 let firstFoundElement = null;
@@ -510,6 +633,10 @@
 
                 document.querySelectorAll('.calendar-day').forEach(dayCell => {
                     dayCell.classList.remove('search-highlight');
+                    dayCell.querySelector('.holiday-markers')?.remove();
+                    dayCell.querySelector('.short-name-label')?.remove();
+                    dayCell.style.opacity = '1';
+                    
                     if (!dayCell.classList.contains('has-holiday')) return;
 
                     const cellHolidays = JSON.parse(dayCell.dataset.holidays);
@@ -521,14 +648,14 @@
                         return countryMatch && typeMatch && searchMatch;
                     });
 
-                    dayCell.querySelector('.holiday-markers')?.remove();
-                    dayCell.querySelector('.short-name-label')?.remove();
-                    dayCell.dataset.tooltipContent = ''; // ВИПРАВЛЕННЯ: Очищуємо підказку перед оновленням
-
                     if (filteredHolidays.length > 0) {
-                        dayCell.style.opacity = '1';
                         visibleHolidaysCount += filteredHolidays.length;
-
+                        dayCell.dataset.tooltipContent = filteredHolidays.map((h, index) => `
+                            <div class="${index > 0 ? 'mt-2 pt-2 border-t border-gray-700' : ''}">
+                                <strong class="block">${h.name}</strong>
+                                <span class="text-xs text-gray-400">${h.countries.join(', ')}</span>
+                            </div>`).join('');
+                        
                         if (searchQuery.length > 0 && !firstFoundElement) {
                             firstFoundElement = dayCell;
                             dayCell.classList.add('search-highlight');
@@ -536,7 +663,6 @@
                         
                         const markersDiv = document.createElement('div');
                         markersDiv.className = 'holiday-markers absolute bottom-1 left-1/2 -translate-x-1/2 flex space-x-1';
-                        const shortNames = [];
                         const uniqueTypes = [...new Set(filteredHolidays.map(h => h.type))];
                         
                         uniqueTypes.forEach(type => {
@@ -546,35 +672,19 @@
                             if (type === 'green') marker.className = 'w-2 h-2 rounded-full bg-green-500';
                             markersDiv.appendChild(marker);
                         });
-
-                        filteredHolidays.slice(0, 2).forEach(h => shortNames.push(h.shortName));
-
-                        if(shortNames.length > 0) {
-                            const shortNameLabel = document.createElement('span');
-                            shortNameLabel.className = 'short-name-label absolute top-0.5 text-center text-[8px] opacity-70 leading-none text-gray-500';
-                            shortNameLabel.textContent = shortNames.join('/');
-                            dayCell.appendChild(shortNameLabel);
-                        }
-
                         dayCell.appendChild(markersDiv);
-                        dayCell.dataset.tooltipContent = filteredHolidays.map((h, index) => `
-                            <div class="${index > 0 ? 'mt-2 pt-2 border-t border-gray-700' : ''}">
-                                <strong class="block">${h.name}</strong>
-                                <span class="text-xs text-gray-400">${h.countries.join(', ')}</span>
-                            </div>`).join('');
                     } else {
                         dayCell.style.opacity = '0.5';
+                        dayCell.dataset.tooltipContent = '';
                     }
                 });
                 
                 holidayCounter.textContent = `Знайдено: ${visibleHolidaysCount} свят`;
-
                 if (isSearch && firstFoundElement) {
                     firstFoundElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }
 
-            // Функції для роботи з підказками
             function showTooltip(event, element) {
                 const content = element.dataset.tooltipContent;
                 if (content) {
@@ -591,18 +701,10 @@
             }
             
             function toggleTooltip(event, element) {
-                if (activeTooltipDay === element) {
-                    tooltip.style.display = 'none';
-                    activeTooltipDay = null;
-                } else {
-                    const content = element.dataset.tooltipContent;
-                    if (content) {
-                        tooltip.innerHTML = content;
-                        tooltip.style.display = 'block';
-                        moveTooltip(event);
-                        activeTooltipDay = element;
-                    }
-                }
+                hideTooltip(); // Hide any existing tooltips
+                event.preventDefault(); // Prevent navigation on tap
+                showTooltip(event, element);
+                setTimeout(hideTooltip, 2000); // Hide after 2 seconds
             }
 
             function moveTooltip(event) {
@@ -610,12 +712,8 @@
                 let x = e.clientX + 15;
                 let y = e.clientY + 15;
 
-                if (x + tooltip.offsetWidth > window.innerWidth) {
-                    x = e.clientX - tooltip.offsetWidth - 15;
-                }
-                if (y + tooltip.offsetHeight > window.innerHeight) {
-                    y = e.clientY - tooltip.offsetHeight - 15;
-                }
+                if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - 15;
+                if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - 15;
 
                 tooltip.style.left = `${x}px`;
                 tooltip.style.top = `${y}px`;
@@ -625,45 +723,34 @@
                 selectCountry('all', 'Всі країни');
                 searchFilter.value = '';
                 typeFilters.forEach(cb => cb.checked = true);
-                updateCalendarView();
+                updateFilteredHolidays();
             }
 
-            // Додаємо слухачі подій до фільтрів
-            typeFilters.forEach(cb => cb.addEventListener('change', () => updateCalendarView()));
-            searchFilter.addEventListener('input', () => updateCalendarView(true));
-            clearFiltersBtn.addEventListener('click', resetFilters);
-            
-            // Логіка для пошукового фільтра країн
-            countryFilterButton.addEventListener('click', () => {
-                countryFilterDropdown.classList.toggle('hidden');
-            });
+            function init() {
+                populateCountryFilter();
+                switchView('year');
 
-            countrySearchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                countryList.querySelectorAll('li').forEach(li => {
-                    const countryName = li.textContent.toLowerCase();
-                    if (countryName.includes(searchTerm)) {
-                        li.style.display = 'flex';
-                    } else {
-                        li.style.display = 'none';
+                typeFilters.forEach(cb => cb.addEventListener('change', () => updateFilteredHolidays()));
+                searchFilter.addEventListener('input', () => updateFilteredHolidays(true));
+                clearFiltersBtn.addEventListener('click', resetFilters);
+                
+                countryFilterButton.addEventListener('click', () => countryFilterDropdown.classList.toggle('hidden'));
+                countrySearchInput.addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    countryList.querySelectorAll('li').forEach(li => {
+                        const countryName = li.textContent.toLowerCase();
+                        li.style.display = countryName.includes(searchTerm) ? 'flex' : 'none';
+                    });
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!countryFilterButton.contains(e.target) && !countryFilterDropdown.contains(e.target)) {
+                        countryFilterDropdown.classList.add('hidden');
                     }
                 });
-            });
+            }
 
-            // Закриття фільтра при кліку поза ним
-            document.addEventListener('click', (e) => {
-                if (!countryFilterButton.contains(e.target) && !countryFilterDropdown.contains(e.target)) {
-                    countryFilterDropdown.classList.add('hidden');
-                }
-                 if (isTouchDevice && activeTooltipDay && !activeTooltipDay.contains(e.target)) {
-                    tooltip.style.display = 'none';
-                    activeTooltipDay = null;
-                }
-            });
-
-            // Ініціалізація
-            populateCountryFilter();
-            generateCalendar();
+            init();
         });
     </script>
 </body>
