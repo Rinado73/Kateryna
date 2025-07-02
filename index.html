@@ -111,6 +111,7 @@
             border: none;
             border-radius: 8px;
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            z-index: 100;
         }
         #country-filter-dropdown {
             background: #FFFFFF;
@@ -391,15 +392,15 @@
 
             const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             let activeTooltipDay = null;
-            let state = { view: 'year', month: null, day: null };
+            let state = { view: 'year', monthIndex: null, dateStr: null };
             
             // Коди країн для прапорів
             const countryCodes = {"Афганістан":"af","Албанія":"al","Алжир":"dz","Ангола":"ao","Вірменія":"am","Австралія":"au","Австрія":"at","Багами":"bs","Бахрейн":"bh","Бангладеш":"bd","Бельгія":"be","Беліз":"bz","Бенін":"bj","Бутан":"bt","Болівія":"bo","Боснія і Герцеговина":"ba","Ботсвана":"bw","Бразилія":"br","Бруней":"bn","Болгарія":"bg","Камбоджа":"kh","Камерун":"cm","Канада":"ca","Кабо-Верде":"cv","Чад":"td","Чилі":"cl","Китай":"cn","Колумбія":"co","Коста-Рика":"cr","Кот-д'Івуар":"ci","Хорватія":"hr","Кіпр":"cy","Чехія":"cz","Данія":"dk","Джибуті":"dj","Еквадор":"ec","Єгипет":"eg","Сальвадор":"sv","Екваторіальна Гвінея":"gq","Еритрея":"er","Естонія":"ee","Ефіопія":"et","Фіджі":"fj","Фінляндія":"fi","Франція":"fr","Гамбія":"gm","Грузія":"ge","Німеччина":"de","Гана":"gh","Греція":"gr","Гватемала":"gt","Гвінея":"gn","Гвінея-Бісау":"gw","Гондурас":"hn","Ісландія":"is","Індія":"in","Індонезія":"id","Ірландія":"ie","Ізраїль":"il","Італія":"it","Ямайка":"jm","Японія":"jp","Казахстан":"kz","Кенія":"ke","Косово":"xk","Кувейт":"kw","Киргизстан":"kg","Лаос":"la","Латвія":"lv","Ліван":"lb","Лесото":"ls","Ліберія":"lr","Литва":"lt","Люксембург":"lu","Мадагаскар":"mg","Малайзія":"my","Мальдіви":"mv","Малі":"ml","Мальта":"mt","Мавританія":"mr","Маврикій":"mu","Мексика":"mx","Молдова":"md","Марокко":"ma","Мозамбік":"mz","М'янма":"mm","Непал":"np","Нідерланди":"nl","Нова Зеландія":"nz","Нікарагуа":"ni","Нігер":"ne","Нігерія":"ng","Північна Македонія":"mk","Норвегія":"no","Пакистан":"pk","Панама":"pa","Папуа-Нова Гвінея":"pg","Перу":"pe","Філіппіни":"ph","Польща":"pl","Португалія":"pt","Катар":"qa","Румунія":"ro","Руанда":"rw","Сан-Томе і Принсіпі":"st","Саудівська Аравія":"sa","Сенегал":"sn","Сербія":"rs","Сьєрра-Леоне":"sl","Сінгапур":"sg","Словенія":"si","ПАР":"za","Південна Корея":"kr","Південний Судан":"ss","Іспанія":"es","Шрі-Ланка":"lk","Судан":"sd","Суринам":"sr","Швеція":"se","Швейцарія":"ch","Сирія":"sy","Тайвань":"tw","Таджикистан":"tj","Танзанія":"tz","Таїланд":"th","Того":"tg","Тринідад і Тобаго":"tt","Туніс":"tn","Туреччина":"tr","Туркменістан":"tm","Уганда":"ug","Україна":"ua","ОАЕ":"ae","Велика Британія":"gb","Уругвай":"uy","Узбекистан":"uz","В'єтнам":"vn","Ємен":"ye","Замбія":"zm","Зімбабве":"zw"};
 
             function switchView(newView, options = {}) {
                 state.view = newView;
-                state.month = options.monthIndex ?? state.month;
-                state.day = options.dateStr ?? state.day;
+                state.monthIndex = options.monthIndex ?? state.monthIndex;
+                state.dateStr = options.dateStr ?? state.dateStr;
 
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
                 document.getElementById(`${newView}-view`).classList.add('active');
@@ -408,8 +409,8 @@
                     filtersPanel.classList.add('hidden');
                     holidayCounter.parentElement.classList.add('hidden');
                 } else {
-                    filtersPanel.classList.remove('hidden');
-                    holidayCounter.parentElement.classList.remove('hidden');
+                    filtersPanel.style.display = 'grid';
+                    holidayCounter.parentElement.style.display = 'block';
                 }
 
                 renderContent();
@@ -420,9 +421,9 @@
                 if (state.view === 'year') {
                     renderYearView();
                 } else if (state.view === 'month') {
-                    renderMonthView(state.month);
+                    renderMonthView(state.monthIndex);
                 } else if (state.view === 'day') {
-                    renderDayView(state.day);
+                    renderDayView(state.dateStr);
                 }
             }
 
@@ -437,16 +438,16 @@
                 if (state.view === 'month' || state.view === 'day') {
                     breadcrumbs.innerHTML += ' / ';
                     const monthLink = document.createElement('span');
-                    monthLink.textContent = monthNames[state.month];
+                    monthLink.textContent = monthNames[state.monthIndex];
                     monthLink.className = 'breadcrumb-link';
-                    monthLink.onclick = () => switchView('month', { monthIndex: state.month });
+                    monthLink.onclick = () => switchView('month', { monthIndex: state.monthIndex });
                     breadcrumbs.appendChild(monthLink);
                 }
 
                 if (state.view === 'day') {
                     breadcrumbs.innerHTML += ' / ';
                     const dayLink = document.createElement('span');
-                    dayLink.textContent = new Date(state.day).getDate();
+                    dayLink.textContent = new Date(state.dateStr).getDate();
                     breadcrumbs.appendChild(dayLink);
                 }
             }
@@ -457,10 +458,10 @@
                 const currentMonthIndex = today.getMonth();
                 const currentYear = today.getFullYear();
 
-                monthNames.forEach((monthName, monthIndex) => {
+                monthNames.forEach((monthIndex, i) => {
                     const monthDiv = document.createElement('div');
                     monthDiv.className = `panel p-4`;
-                    if(monthIndex === currentMonthIndex && year === currentYear) {
+                    if(i === currentMonthIndex && year === currentYear) {
                         monthDiv.classList.add('current-month-glow');
                     }
                     
@@ -468,8 +469,8 @@
                     header.className = `month-header month-header-clickable p-3 -m-4 mb-4 font-bold text-xl text-center`;
                     header.style.borderTopLeftRadius = '12px';
                     header.style.borderTopRightRadius = '12px';
-                    header.textContent = `${monthName}`;
-                    header.onclick = () => switchView('month', { monthIndex });
+                    header.textContent = `${monthIndex}`;
+                    header.onclick = () => switchView('month', { monthIndex: i });
                     monthDiv.appendChild(header);
 
                     const grid = document.createElement('div');
@@ -479,17 +480,17 @@
                         grid.appendChild(Object.assign(document.createElement('div'), { className: 'text-center font-semibold text-gray-500 text-xs py-1', textContent: day }));
                     });
 
-                    const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-                    const startOffset = (new Date(year, monthIndex, 1).getDay() === 0) ? 6 : new Date(year, monthIndex, 1).getDay() - 1;
+                    const daysInMonth = new Date(year, i + 1, 0).getDate();
+                    const startOffset = (new Date(year, i, 1).getDay() === 0) ? 6 : new Date(year, i, 1).getDay() - 1;
 
-                    for (let i = 0; i < startOffset; i++) {
+                    for (let j = 0; j < startOffset; j++) {
                         grid.appendChild(document.createElement('div'));
                     }
 
                     for (let day = 1; day <= daysInMonth; day++) {
                         const dayCell = document.createElement('div');
                         dayCell.className = 'calendar-day relative flex items-center justify-center h-8 text-sm';
-                        const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        const dateStr = `${year}-${String(i + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                         dayCell.textContent = day;
                         if (holidays[dateStr]) {
                              dayCell.classList.add('has-holiday', 'font-bold', 'text-blue-600');
@@ -601,7 +602,7 @@
                     dayCell.dataset.holidays = JSON.stringify(holidays[dateStr]);
                     
                     if(viewType === 'month') {
-                        dayCell.onclick = () => switchView('day', { dateStr });
+                        dayCell.onclick = () => switchView('day', { dateStr, monthIndex });
                         if (isTouchDevice) {
                             dayCell.addEventListener('touchstart', (e) => {
                                 if (e.touches.length === 1) { // Single touch
@@ -630,8 +631,8 @@
                 document.querySelectorAll('.calendar-day').forEach(dayCell => {
                     dayCell.classList.remove('search-highlight');
                     dayCell.querySelector('.holiday-markers')?.remove();
-                    dayCell.querySelector('.short-name-label')?.remove();
                     dayCell.style.opacity = '1';
+                    dayCell.dataset.tooltipContent = '';
                     
                     if (!dayCell.classList.contains('has-holiday')) return;
 
@@ -643,8 +644,6 @@
                         const searchMatch = searchQuery === '' || h.name.toLowerCase().includes(searchQuery);
                         return countryMatch && typeMatch && searchMatch;
                     });
-
-                    dayCell.dataset.tooltipContent = ''; // ВИПРАВЛЕННЯ: Очищуємо підказку перед оновленням
 
                     if (filteredHolidays.length > 0) {
                         visibleHolidaysCount += filteredHolidays.length;
@@ -752,4 +751,3 @@
     </script>
 </body>
 </html>
-
