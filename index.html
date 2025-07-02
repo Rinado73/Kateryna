@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- Стиль Glassmorphism --- */
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Montserrat', sans-serif;
             background: #1a1a2e;
@@ -33,6 +36,7 @@
             border-radius: 50%;
             filter: blur(150px);
             opacity: 0.5;
+            transition: background 0.5s;
         }
 
         .shape1 {
@@ -69,19 +73,24 @@
 
         /* Клас для ефекту скла */
         .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             -webkit-backdrop-filter: blur(12px);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 20px;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        
+        .current-month-glow {
+            box-shadow: 0 0 25px rgba(233, 69, 96, 0.4);
+            border-color: rgba(233, 69, 96, 0.5);
         }
 
         /* Заголовки */
         h1 { color: #ffffff; }
         p { color: #c0c0c0; }
 
-        /* Градієнти для місяців (зробимо їх яскравішими) */
+        /* Градієнти для місяців */
         .gradient-jan { background-image: linear-gradient(to top right, #2980b9, #6dd5fa); }
         .gradient-feb { background-image: linear-gradient(to top right, #c94b4b, #4b134f); }
         .gradient-mar { background-image: linear-gradient(to top right, #11998e, #38ef7d); }
@@ -120,13 +129,17 @@
         }
         
         /* Стилі для фільтрів */
-        .form-checkbox, .form-input, #country-filter-button {
+        .form-checkbox, .form-input, #country-filter-button, #clear-filters-btn {
             background-color: rgba(255, 255, 255, 0.1) !important;
             border: 1px solid rgba(255, 255, 255, 0.2) !important;
             color: #e0e0e0 !important;
+            transition: background-color 0.2s, box-shadow 0.2s;
         }
         .form-checkbox:checked {
             background-color: #e94560 !important;
+        }
+        #clear-filters-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2) !important;
         }
         ::placeholder { color: #a0a0a0 !important; }
         
@@ -192,10 +205,15 @@
                     <span class="ml-2">Агрономічні</span>
                 </label>
             </div>
-             <!-- Пошук -->
-            <div>
-                <label class="block text-sm font-medium mb-1">Пошук за назвою:</label>
-                <input type="text" id="search-filter" placeholder="Наприклад, День незалежності" class="w-full p-2 rounded-md shadow-sm form-input">
+             <!-- Пошук та кнопка очищення -->
+            <div class="flex items-end gap-2">
+                <div class="flex-grow">
+                    <label class="block text-sm font-medium mb-1">Пошук за назвою:</label>
+                    <input type="text" id="search-filter" placeholder="Наприклад, День незалежності" class="w-full p-2 rounded-md shadow-sm form-input">
+                </div>
+                <button id="clear-filters-btn" title="Очистити фільтри" class="p-2 rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
             </div>
         </div>
 
@@ -384,6 +402,7 @@
             const selectedCountryFlag = document.getElementById('selected-country-flag');
             const typeFilters = document.querySelectorAll('.type-filter');
             const searchFilter = document.getElementById('search-filter');
+            const clearFiltersBtn = document.getElementById('clear-filters-btn');
 
             const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             let activeTooltipDay = null;
@@ -394,11 +413,16 @@
             // Функція для генерації календаря
             function generateCalendar() {
                 const today = new Date();
-                const todayStr = (today.getFullYear() === year) ? `${year}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}` : null;
+                const currentMonthIndex = today.getMonth();
+                const currentYear = today.getFullYear();
+                const todayStr = (currentYear === year) ? `${year}-${String(currentMonthIndex + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}` : null;
 
                 monthNames.forEach((monthName, monthIndex) => {
                     const monthDiv = document.createElement('div');
                     monthDiv.className = `month-grid glass-effect p-4`;
+                    if(monthIndex === currentMonthIndex && year === currentYear) {
+                        monthDiv.classList.add('current-month-glow');
+                    }
                     
                     const header = document.createElement('div');
                     header.className = `p-3 -m-4 mb-4 text-white font-bold text-xl text-center gradient-${gradientClasses[monthIndex]}`;
@@ -475,7 +499,6 @@
                 
                 const sortedCountries = Array.from(countries).sort((a, b) => a.localeCompare(b, 'uk'));
                 
-                // Додаємо опцію "Всі країни"
                 const allCountriesLi = document.createElement('li');
                 allCountriesLi.className = 'p-2 hover:bg-gray-100/20 rounded-md cursor-pointer flex items-center';
                 allCountriesLi.textContent = 'Всі країни';
@@ -488,7 +511,6 @@
                          const li = document.createElement('li');
                          li.className = 'p-2 hover:bg-gray-100/20 rounded-md cursor-pointer flex items-center';
                          li.dataset.country = country;
-
                          const code = countryCodes[country]?.toLowerCase();
                          if (code) {
                              const flagImg = document.createElement('img');
@@ -497,11 +519,9 @@
                              flagImg.alt = country;
                              li.appendChild(flagImg);
                          }
-                         
                          const nameSpan = document.createElement('span');
                          nameSpan.textContent = country;
                          li.appendChild(nameSpan);
-
                          li.addEventListener('click', () => selectCountry(country, country, code));
                          countryList.appendChild(li);
                     }
@@ -522,14 +542,13 @@
             }
 
             // Функція для оновлення вигляду календаря відповідно до фільтрів
-            function updateCalendarView() {
+            function updateCalendarView(isSearch = false) {
                 const selectedCountry = filters.dataset.selectedCountry;
                 const selectedTypes = Array.from(typeFilters).filter(cb => cb.checked).map(cb => cb.value);
                 const searchQuery = searchFilter.value.toLowerCase();
+                let firstFoundElement = null;
 
-                document.querySelectorAll('.calendar-day').forEach(dayCell => {
-                    if (!dayCell.classList.contains('has-holiday')) return;
-
+                document.querySelectorAll('.calendar-day.has-holiday').forEach(dayCell => {
                     const cellHolidays = JSON.parse(dayCell.dataset.holidays);
                     
                     const filteredHolidays = cellHolidays.filter(h => {
@@ -539,15 +558,19 @@
                         return countryMatch && typeMatch && searchMatch;
                     });
 
-                    // Очищуємо старі маркери
                     dayCell.querySelector('.holiday-markers')?.remove();
                     dayCell.querySelector('.short-name-label')?.remove();
+                    
+                    dayCell.dataset.tooltipContent = ''; // Reset tooltip content
 
                     if (filteredHolidays.length > 0) {
                         dayCell.style.opacity = '1';
+                        if (isSearch && !firstFoundElement) {
+                            firstFoundElement = dayCell;
+                        }
+                        
                         const markersDiv = document.createElement('div');
                         markersDiv.className = 'holiday-markers absolute bottom-1 left-1/2 -translate-x-1/2 flex space-x-1';
-                        
                         const shortNames = [];
                         const uniqueTypes = [...new Set(filteredHolidays.map(h => h.type))];
                         
@@ -576,9 +599,12 @@
                             </div>`).join('');
                     } else {
                         dayCell.style.opacity = '0.5';
-                        dayCell.dataset.tooltipContent = '';
                     }
                 });
+
+                if (isSearch && firstFoundElement) {
+                    firstFoundElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }
 
             // Функції для роботи з підказками
@@ -627,10 +653,18 @@
                 tooltip.style.left = `${x}px`;
                 tooltip.style.top = `${y}px`;
             }
+            
+            function resetFilters() {
+                selectCountry('all', 'Всі країни');
+                searchFilter.value = '';
+                typeFilters.forEach(cb => cb.checked = true);
+                updateCalendarView();
+            }
 
             // Додаємо слухачі подій до фільтрів
-            typeFilters.forEach(cb => cb.addEventListener('change', updateCalendarView));
-            searchFilter.addEventListener('input', updateCalendarView);
+            typeFilters.forEach(cb => cb.addEventListener('change', () => updateCalendarView()));
+            searchFilter.addEventListener('input', () => updateCalendarView(true));
+            clearFiltersBtn.addEventListener('click', resetFilters);
             
             // Логіка для пошукового фільтра країн
             countryFilterButton.addEventListener('click', () => {
